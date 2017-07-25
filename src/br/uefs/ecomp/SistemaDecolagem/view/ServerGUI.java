@@ -127,11 +127,18 @@ public class ServerGUI {
 		if(controller != null){//se o controller existir
 			btnStartServer.setEnabled(false);//desabilita o botão de inciar
 			int i = 1099;//porta padrão
+			if(rdbtnServidor.isSelected()){
+				i = 1099;
+			}else if(rdbtnServidor2.isSelected()){
+				i = 1100;
+			}else if(rdbtnServidor3.isSelected()){
+				i = 1101;
+			}
 			String portaS = textFieldPorta.getText();//recupera a porta do usuario
 			try{
 				i = Integer.parseInt(portaS);//converte a string em int
 			}catch(NumberFormatException e){
-				textArea.setText("Erro ao digitar porta, porta escolhida padrao: 1099\n");//caso não seja valida a porta avisa ao usuario e usa a porta padrão
+				textArea.setText("Erro ao digitar porta, porta escolhida padrao:"+ i + "\n");//caso não seja valida a porta avisa ao usuario e usa a porta padrão
 			}
 			controller.iniciaServer(i, textArea);//inicia o servidor
 		}

@@ -65,7 +65,20 @@ public class ThreadCliente extends Thread {
                     saida.flush();
                     break;
                 case 1://acessa uma conta
-                    
+                    String nomeAcesso = informacoes[1];
+                    String senhaAcesso = informacoes[2];
+                    try {
+                        controller.loginCliente(nomeAcesso, senhaAcesso);//realiza o login do cliente
+                        s = "Acessar conta " + nomeAcesso;//log
+                        saida.writeObject("concluido");//envia resposta concluido
+                    } catch (CampoVazioException e) {
+                        saida.writeObject("camponaopreenchido");//erro de campo nao preenchido
+                    } catch (FileNotFoundException e) {
+                        saida.writeObject("clientenaoencontrado");//erro de campo nao preenchido
+                    } catch (SenhaIncorretaException e) {
+                        saida.writeObject("senhaincorreta");//erro de campo nao preenchido
+                    }
+                    saida.flush();
                     break;
                 case 2: 
                     
