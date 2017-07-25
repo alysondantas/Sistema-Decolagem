@@ -5,14 +5,21 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import br.uefs.ecomp.SistemaDecolagem.controller.ControllerCliente;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.awt.event.ActionEvent;
 
 public class ClienteLogin {
 
@@ -23,11 +30,12 @@ public class ClienteLogin {
 	private JTextField textField_3;
 	private JTextField textField_4;
 	private JTextField textField_5;
-	private JTextField textField_6;
-	private JPasswordField passwordField;
+	private JTextField textFieldUser;
+	private JPasswordField passwordFieldSenha;
 	private JRadioButton rdbtnServidor;
 	private JRadioButton rdbtnServidor2;
 	private JRadioButton rdbtnServidor3;
+	private ControllerCliente controller = ControllerCliente.getInstance();
 	private final ButtonGroup tipo = new ButtonGroup();
 
 	/**
@@ -84,10 +92,10 @@ public class ClienteLogin {
 		tabbedPane.addTab("Login", null, panel, null);
 		panel.setLayout(null);
 		
-		textField_6 = new JTextField();
-		textField_6.setBounds(59, 11, 86, 20);
-		panel.add(textField_6);
-		textField_6.setColumns(10);
+		textFieldUser = new JTextField();
+		textFieldUser.setBounds(59, 11, 86, 20);
+		panel.add(textFieldUser);
+		textFieldUser.setColumns(10);
 		
 		JLabel lblNome = new JLabel("Usuario:");
 		lblNome.setBounds(10, 14, 50, 14);
@@ -97,9 +105,9 @@ public class ClienteLogin {
 		lblSenha.setBounds(193, 14, 50, 14);
 		panel.add(lblSenha);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(232, 11, 86, 20);
-		panel.add(passwordField);
+		passwordFieldSenha = new JPasswordField();
+		passwordFieldSenha.setBounds(232, 11, 86, 20);
+		panel.add(passwordFieldSenha);
 		
 		rdbtnServidor = new JRadioButton("Servidor 1");
 		rdbtnServidor.setSelected(true);
@@ -122,6 +130,11 @@ public class ClienteLogin {
 		panel.add(btnLogin);
 		
 		JButton btnCadastrar = new JButton("Cadastrar");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cadastrar();
+			}
+		});
 		btnCadastrar.setBounds(229, 130, 89, 23);
 		panel.add(btnCadastrar);
 		
@@ -170,7 +183,7 @@ public class ClienteLogin {
 		panel_1.add(lblServidorPorta);
 		
 		textField_4 = new JTextField();
-		textField_4.setText("1099");
+		textField_4.setText("1100");
 		textField_4.setColumns(10);
 		textField_4.setBounds(178, 89, 42, 20);
 		panel_1.add(textField_4);
@@ -180,7 +193,7 @@ public class ClienteLogin {
 		panel_1.add(lblServidorPorta_1);
 		
 		textField_5 = new JTextField();
-		textField_5.setText("1099");
+		textField_5.setText("1101");
 		textField_5.setColumns(10);
 		textField_5.setBounds(178, 143, 42, 20);
 		panel_1.add(textField_5);
@@ -188,5 +201,23 @@ public class ClienteLogin {
 		JLabel lblServidorPorta_2 = new JLabel("Servidor 3 PORTA:");
 		lblServidorPorta_2.setBounds(178, 120, 98, 14);
 		panel_1.add(lblServidorPorta_2);
+	}
+	
+	public void cadastrar(){
+		String nome = textFieldUser.getText();
+		String senha = passwordFieldSenha.getText();
+		try {
+			String recebido = controller.cadastrar(senha, nome);
+			if(recebido.equals("concluido")){
+				JOptionPane.showMessageDialog(null,"Cadastro concluido:" + recebido,"Efetuado",2);//exibe recebido
+			}else if (recebido.equals("camponaopreenchido")){
+				JOptionPane.showMessageDialog(null,"Campo não preenchido: " + recebido,"Erro",2);//exibe recebido
+			}else if (recebido.equals("cadastrojaexistente")){
+				JOptionPane.showMessageDialog(null,"Cadastro ja existente: " + recebido,"Erro",2);//exibe recebido
+			}
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
