@@ -102,6 +102,7 @@ public class ClienteLogin {
 		panel.add(passwordField);
 		
 		rdbtnServidor = new JRadioButton("Servidor 1");
+		rdbtnServidor.setSelected(true);
 		rdbtnServidor.setBounds(40, 62, 86, 23);
 		tipo.add(rdbtnServidor);
 		panel.add(rdbtnServidor);
