@@ -18,11 +18,12 @@ import javax.swing.JRadioButton;
 public class ServerGUI {
 
 	private JFrame frame;
-	private JTextField textField;
+	private JTextField textFieldPorta;
 	private final ButtonGroup tipo = new ButtonGroup();
 	private JRadioButton rdbtnServidor;
 	private JRadioButton rdbtnServidor2;
 	private JRadioButton rdbtnServidor3;
+	private JButton btnStartServer;
 	private ControllerServer controller = ControllerServer.getInstance();
 
 	/**
@@ -78,18 +79,18 @@ public class ServerGUI {
 		textArea.setBounds(11, 11, 412, 180);
 		frame.getContentPane().add(textArea);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(46, 200, 86, 20);
-		frame.getContentPane().add(textField);
+		textFieldPorta = new JTextField();
+		textFieldPorta.setColumns(10);
+		textFieldPorta.setBounds(46, 200, 86, 20);
+		frame.getContentPane().add(textFieldPorta);
 		
 		JLabel label = new JLabel("Porta:");
 		label.setBounds(11, 204, 46, 14);
 		frame.getContentPane().add(label);
 		
-		JButton button = new JButton("Start Server");
-		button.setBounds(308, 270, 115, 23);
-		frame.getContentPane().add(button);
+		btnStartServer = new JButton("Start Server");
+		btnStartServer.setBounds(308, 270, 115, 23);
+		frame.getContentPane().add(btnStartServer);
 		
 		rdbtnServidor = new JRadioButton("Servidor 1");
 		rdbtnServidor.setSelected(true);
@@ -119,9 +120,9 @@ public class ServerGUI {
 			try{
 				i = Integer.parseInt(portaS);//converte a string em int
 			}catch(NumberFormatException e){
-				textField.setText("Erro ao digitar porta, porta escolhida padrao: 1099\n");//caso não seja valida a porta avisa ao usuario e usa a porta padrão
+				textFieldPorta.setText("Erro ao digitar porta, porta escolhida padrao: 1099\n");//caso não seja valida a porta avisa ao usuario e usa a porta padrão
 			}
-			controller.iniciaServer(i, textField);//inicia o servidor
+			controller.iniciaServer(i, textFieldPorta);//inicia o servidor
 		}
 	}
 }
