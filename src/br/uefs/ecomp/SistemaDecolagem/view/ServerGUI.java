@@ -1,6 +1,8 @@
 package br.uefs.ecomp.SistemaDecolagem.view;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -19,6 +21,7 @@ public class ServerGUI {
 
 	private JFrame frame;
 	private JTextField textFieldPorta;
+	private JTextArea textArea;
 	private final ButtonGroup tipo = new ButtonGroup();
 	private JRadioButton rdbtnServidor;
 	private JRadioButton rdbtnServidor2;
@@ -73,7 +76,7 @@ public class ServerGUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JTextArea textArea = new JTextArea();
+		textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setColumns(10);
 		textArea.setBounds(11, 11, 412, 180);
@@ -90,6 +93,14 @@ public class ServerGUI {
 		
 		btnStartServer = new JButton("Start Server");
 		btnStartServer.setBounds(308, 270, 115, 23);
+		btnStartServer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				iniciaServer();
+			}
+		});
 		frame.getContentPane().add(btnStartServer);
 		
 		rdbtnServidor = new JRadioButton("Servidor 1");
@@ -120,9 +131,9 @@ public class ServerGUI {
 			try{
 				i = Integer.parseInt(portaS);//converte a string em int
 			}catch(NumberFormatException e){
-				textFieldPorta.setText("Erro ao digitar porta, porta escolhida padrao: 1099\n");//caso não seja valida a porta avisa ao usuario e usa a porta padrão
+				textArea.setText("Erro ao digitar porta, porta escolhida padrao: 1099\n");//caso não seja valida a porta avisa ao usuario e usa a porta padrão
 			}
-			controller.iniciaServer(i, textFieldPorta);//inicia o servidor
+			controller.iniciaServer(i, textArea);//inicia o servidor
 		}
 	}
 }

@@ -4,12 +4,15 @@ import java.net.ServerSocket;
 
 import javax.swing.JTextArea;
 
-import br.uefs.ecomp.bancoCooperativo.controller.ControllerServer;
-import br.uefs.ecomp.bancoCooperativo.controller.thread.ThreadGUI;
+import br.uefs.ecomp.SistemaDecolagem.threads.ThreadCliente;
+import br.uefs.ecomp.SistemaDecolagem.threads.ThreadServeCliente;
+
 
 public class ControllerServer {
 	
 	private static ControllerServer unicaInstancia;
+	private ServerSocket server;
+	private ThreadCliente thread;
 	
 	private ControllerServer(){
 		
@@ -48,7 +51,7 @@ public class ControllerServer {
 			System.out.println("Servidor iniciado, ouvindo a porta " + port);
 			textField.setText(textField.getText() + "Servidor iniciado, ouvindo a porta " + port);//indica que o servidor foi ligado em determinada porta
 
-			ThreadGUI threadGUI = new ThreadGUI(thread, textField, server);//thread que permite a atualização periodica da GUI
+			ThreadServeCliente threadGUI = new ThreadServeCliente(thread, textField, server);//thread que permite a atualização periodica da GUI
 			threadGUI.start();
 
 		}catch(Exception e){
