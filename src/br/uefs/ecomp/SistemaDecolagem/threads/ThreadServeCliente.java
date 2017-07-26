@@ -9,7 +9,7 @@ import javax.swing.JTextArea;
 public class ThreadServeCliente extends Thread {
 
 	private JTextArea textField;//para atualizar a interface
-	private ThreadCliente thread;
+	private ThreadRecebeCliente thread;
 	private ServerSocket server;
 
 	/**
@@ -18,7 +18,7 @@ public class ThreadServeCliente extends Thread {
 	 * @param textField TextField do log
 	 * @param server Servidor para os clientes
 	 */
-	public ThreadServeCliente(ThreadCliente thread, JTextArea textField,ServerSocket server){
+	public ThreadServeCliente(ThreadRecebeCliente thread, JTextArea textField,ServerSocket server){
 		this.textField = textField;
 		this.thread = thread;
 		this.server = server;
@@ -37,7 +37,7 @@ public class ThreadServeCliente extends Thread {
 				e.printStackTrace();
 			}
 			if(cliente!=null){//caso o cliente não seja nulo
-				thread = new ThreadCliente(server, textField, cliente);//passa parametros para thread como o socket server e a textArea
+				thread = new ThreadRecebeCliente(server, textField, cliente);//passa parametros para thread como o socket server e a textArea
 				thread.start();//inicia a thread
 			}else{
 				System.out.println("erro cliente nulo");

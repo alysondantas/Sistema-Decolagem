@@ -18,7 +18,7 @@ import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
 
 
-public class ThreadCliente extends Thread {
+public class ThreadRecebeCliente extends Thread {
     private Socket cliente;//socket do cliente
     private ServerSocket server;//socket do servidor
     private JTextArea textField;//para atualizar a interface
@@ -30,7 +30,7 @@ public class ThreadCliente extends Thread {
 	 * @param textField Area de log na interface
 	 * @param cliente Cliente que ja foi aceito
 	 */
-	public ThreadCliente(ServerSocket server, JTextArea textField, Socket cliente) {//recebe o socket server e o textArea
+	public ThreadRecebeCliente(ServerSocket server, JTextArea textField, Socket cliente) {//recebe o socket server e o textArea
 		this.server = server; 
 		this.cliente = cliente;
 		this.textField = textField;

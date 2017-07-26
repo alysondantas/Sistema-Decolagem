@@ -2,10 +2,12 @@ package br.uefs.ecomp.SistemaDecolagem.controller;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,10 +19,11 @@ import br.uefs.ecomp.SistemaDecolagem.model.*;
 public class ControllerDadosServer {
 
 	private static ControllerDadosServer unicaInstancia;
+	private Grafo grafo;
 
 
 	private ControllerDadosServer(){
-
+		grafo = new Grafo();
 	}
 
 	/**
@@ -53,8 +56,8 @@ public class ControllerDadosServer {
 		if (nome == null || nome.equals("") || senha == null || senha.equals("")) {
 			throw new CampoVazioException();
 		}
-
-		criaCaminho();//cria o caminho
+		String caminho = "clientes";
+		criaCaminho(caminho);//cria o caminho
 		File arquivos = new File("/sistemaDecolagem/clientes/");
 		File todosarquivos[] = arquivos.listFiles();//verifica todos os arquivos que ja estão na pasta
 		int cont = 0;
@@ -78,7 +81,8 @@ public class ControllerDadosServer {
 	 * @throws IOException
 	 */
 	private void escreveCliente(Cliente cliente) throws IOException {
-		criaCaminho();//cria o caminho caso ele não exista
+		String caminho = "clientes";
+		criaCaminho(caminho);//cria o caminho caso ele não exista
 		ObjectOutputStream objectOutC = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("/sistemaDecolagem/clientes/" + cliente.getNome() + ".dat")));	//grava o objeto no caminho informado		
 		objectOutC.writeObject(cliente);//escreve o arquivo
 		objectOutC.flush();
@@ -88,8 +92,8 @@ public class ControllerDadosServer {
 	/**
 	 * Metedo que cria as pastas de acesso caso não ja existam
 	 */
-	private void criaCaminho() {
-		File caminhoCliente = new File("\\sistemaDecolagem\\clientes"); // verifica se a pasta existe
+	private void criaCaminho(String caminho) {
+		File caminhoCliente = new File("\\sistemaDecolagem\\" + caminho); // verifica se a pasta existe
 		if (!caminhoCliente.exists()) {
 			caminhoCliente.mkdirs(); //caso não exista cria a pasta
 		}
@@ -107,7 +111,8 @@ public class ControllerDadosServer {
 	 * @throws SenhaIncorretaException
 	 */
 	public Cliente loginCliente(String nome, String senha) throws CampoVazioException, FileNotFoundException, IOException, ClassNotFoundException, SenhaIncorretaException {
-		criaCaminho();//cria o caminho
+		String caminho = "clientes";
+		criaCaminho(caminho);//cria o caminho
 		if (nome == null || nome.equals("") || senha == null || senha.equals("")) {
 			throw new CampoVazioException();//lança exceção caso uma dos campos estejam vazios
 		}
@@ -123,6 +128,24 @@ public class ControllerDadosServer {
 			throw new SenhaIncorretaException();
 		}
 	}
-	
-	
+
+	public void lerGrafo(){
+		String caminho = "grafo";
+		criaCaminho(caminho);
+		String linha = null;
+		try {
+			FileReader arq = new FileReader("/sistemaDecolagem/grafo/grafo.dat");
+			BufferedReader lerArq = new BufferedReader(arq);
+			linha = lerArq.readLine(); // lê a primeira linha
+			arq.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(linha != null){
+			
+		}
+	}
+
+
 }

@@ -4,7 +4,7 @@ import java.net.ServerSocket;
 
 import javax.swing.JTextArea;
 
-import br.uefs.ecomp.SistemaDecolagem.threads.ThreadCliente;
+import br.uefs.ecomp.SistemaDecolagem.threads.ThreadRecebeCliente;
 import br.uefs.ecomp.SistemaDecolagem.threads.ThreadServeCliente;
 
 
@@ -12,7 +12,7 @@ public class ControllerServer {
 	
 	private static ControllerServer unicaInstancia;
 	private ServerSocket server;
-	private ThreadCliente thread;
+	private ThreadRecebeCliente thread;
 	
 	private ControllerServer(){
 		

@@ -15,7 +15,7 @@ public class Vertice {
 		this.nome = nome;
 		this.qtdPoltronas = qtdPoltronas;
 		poltronasLivres = qtdPoltronas;
-		setArestas(new ArrayList<>());
+		arestas = new ArrayList<>();
 	}
 
 	public String getNome() {
