@@ -72,7 +72,7 @@ public class ServerGUI {
 		}
 		
 		frame = new JFrame();
-		frame.setBounds(100, 100, 449, 343);
+		frame.setBounds(100, 100, 449, 320);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -84,15 +84,15 @@ public class ServerGUI {
 		
 		textFieldPorta = new JTextField();
 		textFieldPorta.setColumns(10);
-		textFieldPorta.setBounds(46, 200, 86, 20);
+		textFieldPorta.setBounds(337, 202, 86, 20);
 		frame.getContentPane().add(textFieldPorta);
 		
 		JLabel label = new JLabel("Porta:");
-		label.setBounds(11, 204, 46, 14);
+		label.setBounds(302, 206, 46, 14);
 		frame.getContentPane().add(label);
 		
 		btnStartServer = new JButton("Start Server");
-		btnStartServer.setBounds(308, 270, 115, 23);
+		btnStartServer.setBounds(308, 250, 115, 23);
 		btnStartServer.addActionListener(new ActionListener() {
 			
 			@Override
@@ -106,17 +106,17 @@ public class ServerGUI {
 		rdbtnServidor = new JRadioButton("Servidor 1");
 		rdbtnServidor.setSelected(true);
 		tipo.add(rdbtnServidor);
-		rdbtnServidor.setBounds(11, 227, 86, 23);
+		rdbtnServidor.setBounds(11, 198, 86, 23);
 		frame.getContentPane().add(rdbtnServidor);
 		
 		rdbtnServidor2 = new JRadioButton("Servidor 2");
 		tipo.add(rdbtnServidor2);
-		rdbtnServidor2.setBounds(11, 253, 86, 23);
+		rdbtnServidor2.setBounds(11, 224, 86, 23);
 		frame.getContentPane().add(rdbtnServidor2);
 		
 		rdbtnServidor3 = new JRadioButton("Servidor 3");
 		tipo.add(rdbtnServidor3);
-		rdbtnServidor3.setBounds(11, 279, 86, 23);
+		rdbtnServidor3.setBounds(11, 250, 86, 23);
 		frame.getContentPane().add(rdbtnServidor3);
 	}
 	
@@ -126,13 +126,21 @@ public class ServerGUI {
 	private void iniciaServer(){
 		if(controller != null){//se o controller existir
 			btnStartServer.setEnabled(false);//desabilita o botão de inciar
+			rdbtnServidor.setEnabled(false);
+			rdbtnServidor2.setEnabled(false);
+			rdbtnServidor3.setEnabled(false);
+			textFieldPorta.setEnabled(false);
 			int i = 1099;//porta padrão
+			String servidor = "grafo";
 			if(rdbtnServidor.isSelected()){
 				i = 1099;
+				servidor = "grafo1.dat";
 			}else if(rdbtnServidor2.isSelected()){
 				i = 1100;
+				servidor = "grafo2.dat";
 			}else if(rdbtnServidor3.isSelected()){
 				i = 1101;
+				servidor = "grafo3.dat";
 			}
 			String portaS = textFieldPorta.getText();//recupera a porta do usuario
 			try{
@@ -140,7 +148,8 @@ public class ServerGUI {
 			}catch(NumberFormatException e){
 				textArea.setText("Erro ao digitar porta, porta escolhida padrao:"+ i + "\n");//caso não seja valida a porta avisa ao usuario e usa a porta padrão
 			}
-			controller.iniciaServer(i, textArea);//inicia o servidor
+			textFieldPorta.setText("" + i);
+			controller.iniciaServer(i, textArea, servidor);//inicia o servidor
 		}
 	}
 }

@@ -8,13 +8,10 @@ import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 public class Vertice {
 	private String nome;
 	private List<Aresta> arestas;
-	private int qtdPoltronas;
-	private int poltronasLivres;
 	
-	public Vertice(String nome, int qtdPoltronas){
+	
+	public Vertice(String nome){
 		this.nome = nome;
-		this.qtdPoltronas = qtdPoltronas;
-		poltronasLivres = qtdPoltronas;
 		arestas = new ArrayList<>();
 	}
 
@@ -33,29 +30,9 @@ public class Vertice {
 	public void setArestas(List<Aresta> arestas) {
 		this.arestas = arestas;
 	}
-
-	public int getQtdPoltronas() {
-		return qtdPoltronas;
-	}
-
-	public int getPoltronasLivres() {
-		return poltronasLivres;
-	}
-
-	public void incrementaPoltronasLivres() throws OperacaoInvalidaException {
-		if(poltronasLivres < qtdPoltronas){
-			this.poltronasLivres++;
-		}else{
-			throw new OperacaoInvalidaException();
-		}
-	}
 	
-	public void decrementaPoltronasLivres() throws OperacaoInvalidaException {
-		if(poltronasLivres < 1){
-			throw new OperacaoInvalidaException();
-		}else{
-			poltronasLivres--;
-		}
+	public void addAresta(Aresta aresta){
+		this.arestas.add(aresta);
 	}
 
 }

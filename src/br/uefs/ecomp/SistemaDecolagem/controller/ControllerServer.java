@@ -1,5 +1,6 @@
 package br.uefs.ecomp.SistemaDecolagem.controller;
 
+import java.io.FileNotFoundException;
 import java.net.ServerSocket;
 
 import javax.swing.JTextArea;
@@ -42,10 +43,14 @@ public class ControllerServer {
 	 * @param textField TextField do log
 	 * @return
 	 */
-	public String iniciaServer(int port, JTextArea textField){
+	public String iniciaServer(int port, JTextArea textField, String servidor){
 		try {     
 			System.out.println("Incializando o servidor...");
 			textField.setText(textField.getText() + "Incializando o servidor... \n");
+			
+			ControllerDadosServer controllerDados = ControllerDadosServer.getInstance();
+			controllerDados.lerGrafo(servidor);
+			textField.setText(textField.getText() + "Destinos e trechos atualizados... \n");
 
 			server = new ServerSocket(port);//instancia um socket server na porta desejada
 			System.out.println("Servidor iniciado, ouvindo a porta " + port);
@@ -54,9 +59,11 @@ public class ControllerServer {
 			ThreadServeCliente threadGUI = new ThreadServeCliente(thread, textField, server);//thread que permite a atualização periodica da GUI
 			threadGUI.start();
 
+		}catch(FileNotFoundException e){
+			textField.setText(textField.getText() + "Erro arquivo de grafo do servidor não foi encontrado!");//caso alguma exceção desconheciada seja lançada ela encerra a thread e é exibida
 		}catch(Exception e){
 			e.printStackTrace();//exibe a exceção que foi lançada
-			textField.setText(textField.getText() + "Excecao ocorrida ao criar thread: " + e);//caso alguma exceção desconheciada seja lançada ela encerra a thread e é exibida
+			textField.setText(textField.getText() + "Excecao ocorrida ao criar conexão: " + e);//caso alguma exceção desconheciada seja lançada ela encerra a thread e é exibida
 		}
 
 		return null;

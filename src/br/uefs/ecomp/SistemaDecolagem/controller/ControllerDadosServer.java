@@ -11,8 +11,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.regex.Pattern;
+
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CadastroJaExistenteException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
 import br.uefs.ecomp.SistemaDecolagem.model.*;
 
@@ -22,6 +25,9 @@ public class ControllerDadosServer {
 	private Grafo grafo;
 
 
+	/**
+	 * Construtor
+	 */
 	private ControllerDadosServer(){
 		grafo = new Grafo();
 	}
@@ -129,22 +135,50 @@ public class ControllerDadosServer {
 		}
 	}
 
-	public void lerGrafo(){
+	/**
+	 * Metodo que faz a leitura do arquivo de grafo e estrutura as rotas
+	 * @param arquivo
+	 * @throws OperacaoInvalidaException
+	 * @throws IOException
+	 */
+	public void lerGrafo(String arquivo) throws OperacaoInvalidaException, IOException{
 		String caminho = "grafo";
 		criaCaminho(caminho);
 		String linha = null;
-		try {
-			FileReader arq = new FileReader("/sistemaDecolagem/grafo/grafo.dat");
-			BufferedReader lerArq = new BufferedReader(arq);
-			linha = lerArq.readLine(); // lê a primeira linha
-			arq.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		FileReader arq = new FileReader("/sistemaDecolagem/grafo/" + arquivo);
+		BufferedReader lerArq = new BufferedReader(arq);
+		linha = lerArq.readLine(); // lê a primeira linha
+		arq.close();
+
 		if(linha != null){
-			
-		}
+			System.out.println("Arquivo lido " + linha);
+			String informacoes[] = linha.split(Pattern.quote("!"));
+			String cidades[] = informacoes[0].split(Pattern.quote("%"));
+			int i = cidades.length;
+			//adiciona as cidades ao grafo
+			for(i = 0 ; i < cidades.length ; i++){
+				String cidade = cidades[i];
+				System.out.println("Nova cidade add " + cidade);
+				Vertice novaCidade = new Vertice(cidade);
+				grafo.inserirPonto(novaCidade);
+			}
+
+			String rotasNovas[] = informacoes[1].split(Pattern.quote("$"));
+			i = rotasNovas.length;
+			//adiciona as rotas
+			for(i = 0 ; i < rotasNovas.length ; i++){
+				String rota[] = rotasNovas[i].split(Pattern.quote("#"));
+				Vertice destino = grafo.getVertice(rota[1]);
+				Vertice origem = grafo.getVertice(rota[0]);
+				if(destino != null && origem !=null){
+					Aresta nova = new Aresta(destino, Integer.parseInt(rota[2]));
+					System.out.println("Novo trecho de " + origem.getNome() + " para " + destino.getNome() + " com " + nova.getPoltronasLivres() + " proltronas");
+					origem.addAresta(nova);
+				}else{
+					throw new OperacaoInvalidaException();
+				}
+			}
+		}	
 	}
 
 
