@@ -1,4 +1,4 @@
-package br.uefs.SistemaDecolagem.exceptions;
+package br.uefs.ecomp.SistemaDecolagem.exceptions;
 
 public class SenhaIncorretaException extends Exception {
 	public SenhaIncorretaException(){

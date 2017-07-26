@@ -13,6 +13,9 @@ import java.util.regex.Pattern;
 
 import javax.swing.JTextArea;
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerDadosServer;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.CadastroJaExistenteException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
 import br.uefs.SistemaDecolagem.exceptions.*;
 
 
