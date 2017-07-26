@@ -1,8 +1,11 @@
 package br.uefs.ecomp.SistemaDecolagem.model;
 
+import java.io.Serializable;
+
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 
-public class Aresta {
+public class Aresta implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Vertice destino;
 	private int qtdPoltronas;
 	private int poltronasLivres;

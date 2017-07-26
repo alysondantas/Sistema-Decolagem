@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 
 import javax.swing.JTextArea;
 
+import br.uefs.ecomp.SistemaDecolagem.threads.ThreadConexaoRMI;
 import br.uefs.ecomp.SistemaDecolagem.threads.ThreadRecebeCliente;
 import br.uefs.ecomp.SistemaDecolagem.threads.ThreadServeCliente;
 
@@ -43,15 +44,19 @@ public class ControllerServer {
 	 * @param textField TextField do log
 	 * @return
 	 */
-	public String iniciaServer(int port, JTextArea textField, String servidor){
+	public String iniciaServer(int port, JTextArea textField, String grafo, String servidor){
 		try {     
 			System.out.println("Incializando o servidor...");
 			textField.setText(textField.getText() + "Incializando o servidor... \n");
 			
 			ControllerDadosServer controllerDados = ControllerDadosServer.getInstance();
-			controllerDados.lerGrafo(servidor);
-			textField.setText(textField.getText() + "Destinos e trechos atualizados... \n");
+			controllerDados.lerGrafo(grafo);
+			controllerDados.setSeuServer(servidor);
+			textField.setText(textField.getText() + "Destinos e trechos atualizados... \n");//atualiza as cidades e trechos pelo arquivo
 
+			ThreadConexaoRMI tConexaoRMI = new ThreadConexaoRMI(servidor,port+1000, textField);
+			tConexaoRMI.start();
+			
 			server = new ServerSocket(port);//instancia um socket server na porta desejada
 			System.out.println("Servidor iniciado, ouvindo a porta " + port);
 			textField.setText(textField.getText() + "Servidor iniciado, ouvindo a porta " + port);//indica que o servidor foi ligado em determinada porta

@@ -12,6 +12,7 @@ public class ThreadServeCliente extends Thread {
 	private ThreadRecebeCliente thread;
 	private ServerSocket server;
 
+
 	/**
 	 * Construtor
 	 * @param thread Thread a ser iniciada

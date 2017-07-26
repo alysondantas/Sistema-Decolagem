@@ -3,6 +3,9 @@ package br.uefs.ecomp.SistemaDecolagem.view;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -10,12 +13,14 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import br.uefs.ecomp.SistemaDecolagem.controller.ControllerDadosServer;
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerServer;
 
 import javax.swing.JLabel;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 
 public class ServerGUI {
 
@@ -76,12 +81,6 @@ public class ServerGUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		textArea = new JTextArea();
-		textArea.setEditable(false);
-		textArea.setColumns(10);
-		textArea.setBounds(11, 11, 412, 180);
-		frame.getContentPane().add(textArea);
-		
 		textFieldPorta = new JTextField();
 		textFieldPorta.setColumns(10);
 		textFieldPorta.setBounds(337, 202, 86, 20);
@@ -118,6 +117,36 @@ public class ServerGUI {
 		tipo.add(rdbtnServidor3);
 		rdbtnServidor3.setBounds(11, 250, 86, 23);
 		frame.getContentPane().add(rdbtnServidor3);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(11, 11, 412, 180);
+		frame.getContentPane().add(scrollPane);
+		
+		textArea = new JTextArea();
+		scrollPane.setViewportView(textArea);
+		textArea.setEditable(false);
+		textArea.setColumns(10);
+		
+		JButton btnSync = new JButton("sync");
+		btnSync.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ControllerDadosServer controllerD = ControllerDadosServer.getInstance();
+				try {
+					controllerD.syncGrafos();
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NotBoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnSync.setBounds(209, 250, 89, 23);
+		frame.getContentPane().add(btnSync);
 	}
 	
 	/**
@@ -131,16 +160,20 @@ public class ServerGUI {
 			rdbtnServidor3.setEnabled(false);
 			textFieldPorta.setEnabled(false);
 			int i = 1099;//porta padrão
-			String servidor = "grafo";
+			String grafo = "grafo";
+			String servidor = "servidor";
 			if(rdbtnServidor.isSelected()){
 				i = 1099;
-				servidor = "grafo1.dat";
+				grafo = "grafo1.dat";
+				servidor = "servidor1";
 			}else if(rdbtnServidor2.isSelected()){
 				i = 1100;
-				servidor = "grafo2.dat";
+				grafo = "grafo2.dat";
+				servidor = "servidor2";
 			}else if(rdbtnServidor3.isSelected()){
 				i = 1101;
-				servidor = "grafo3.dat";
+				grafo = "grafo3.dat";
+				servidor = "servidor3";
 			}
 			String portaS = textFieldPorta.getText();//recupera a porta do usuario
 			try{
@@ -149,7 +182,7 @@ public class ServerGUI {
 				textArea.setText("Erro ao digitar porta, porta escolhida padrao:"+ i + "\n");//caso não seja valida a porta avisa ao usuario e usa a porta padrão
 			}
 			textFieldPorta.setText("" + i);
-			controller.iniciaServer(i, textArea, servidor);//inicia o servidor
+			controller.iniciaServer(i, textArea, grafo, servidor);//inicia o servidor
 		}
 	}
 }

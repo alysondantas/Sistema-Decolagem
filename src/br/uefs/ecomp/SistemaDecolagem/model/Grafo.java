@@ -1,12 +1,15 @@
 package br.uefs.ecomp.SistemaDecolagem.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import br.uefs.ecomp.SistemaDecolagem.util.IGrafo;
 
-public class Grafo implements IGrafo{
+public class Grafo implements IGrafo, Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private List<Vertice> vertices;
 
 	public Grafo(){

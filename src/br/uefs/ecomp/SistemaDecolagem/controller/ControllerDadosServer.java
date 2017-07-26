@@ -11,6 +11,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CadastroJaExistenteException;
@@ -18,11 +23,21 @@ import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
 import br.uefs.ecomp.SistemaDecolagem.model.*;
+import br.uefs.ecomp.SistemaDecolagem.threads.ThreadConexaoRMI;
+import br.uefs.ecomp.SistemaDecolagem.util.ConexaoRMI;
 
 public class ControllerDadosServer {
 
 	private static ControllerDadosServer unicaInstancia;
 	private Grafo grafo;
+	private Grafo grafoServers;
+	private String seuNomeServer;
+	private int portServer1 = 1099;
+	private String ipServer1 = "192.168.15.4";
+	private int portServer2 = 1100;
+	private String ipServer2 = "192.168.15.4";
+	private int portServer3 = 1101;
+	private String ipServer3 = "192.168.15.4";
 
 
 	/**
@@ -30,6 +45,8 @@ public class ControllerDadosServer {
 	 */
 	private ControllerDadosServer(){
 		grafo = new Grafo();
+		grafoServers = new Grafo();
+		setSeuServer("");
 	}
 
 	/**
@@ -180,6 +197,41 @@ public class ControllerDadosServer {
 			}
 		}	
 	}
+	
+	public void syncGrafos() throws MalformedURLException, RemoteException, NotBoundException{
+		if(seuNomeServer.equals("servidor1")){
+			String nomServidor2 = "servidor2";
+			int lportServer2 = portServer2 + 1000;
+			ConexaoRMI conexaoRMI2 = (ConexaoRMI) Naming.lookup( "rmi://"+ipServer2+":"+lportServer2+"/" + nomServidor2);
+			Grafo grafinho = conexaoRMI2.getGrafo();
+			if(grafinho!=null){
+				System.out.println("Ja deu bom");
+				Iterator<Vertice> itera = grafinho.iterador();
+				Vertice aux;
+				System.err.println("Pontos do grafo obtido:");
+				while(itera.hasNext()){
+					aux = itera.next();
+					System.out.println("" + aux.getNome());
+				}
+				System.err.println("Acabou tio");
+			}else{
+				System.out.println("Deu ruim");
+			}
+		}
+	}
+
+	public String getSeuServer() {
+		return seuNomeServer;
+	}
+
+	public void setSeuServer(String seuServer) {
+		this.seuNomeServer = seuServer;
+	}
+	
+	public Grafo getGrafo(){
+		return grafo;
+	}
+
 
 
 }
