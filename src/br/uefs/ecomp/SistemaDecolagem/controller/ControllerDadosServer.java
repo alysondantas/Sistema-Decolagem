@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import br.uefs.SistemaDecolagem.exceptions.*;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CadastroJaExistenteException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
