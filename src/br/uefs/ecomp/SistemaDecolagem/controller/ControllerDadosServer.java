@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CadastroJaExistenteException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
@@ -124,4 +123,6 @@ public class ControllerDadosServer {
 			throw new SenhaIncorretaException();
 		}
 	}
+	
+	
 }

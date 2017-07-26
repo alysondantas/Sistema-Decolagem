@@ -206,6 +206,7 @@ public class ClienteLogin {
 	public void cadastrar(){
 		String nome = textFieldUser.getText();
 		String senha = passwordFieldSenha.getText();
+		JOptionPane.showMessageDialog(null,"Sua senha:" + senha,"Senha",2);//exibe recebido
 		try {
 			String recebido = controller.cadastrar(senha, nome);
 			if(recebido.equals("concluido")){
