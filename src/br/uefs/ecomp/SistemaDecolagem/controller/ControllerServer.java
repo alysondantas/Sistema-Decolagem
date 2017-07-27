@@ -11,13 +11,13 @@ import br.uefs.ecomp.SistemaDecolagem.threads.ThreadServeCliente;
 
 
 public class ControllerServer {
-	
+
 	private static ControllerServer unicaInstancia;
 	private ServerSocket server;
 	private ThreadRecebeCliente thread;
-	
+
 	private ControllerServer(){
-		
+
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class ControllerServer {
 	public static void zerarSingleton (){
 		unicaInstancia = null;
 	}
-	
+
 	/**
 	 * Metodo que inicia o servidor
 	 * @param port Porta para o servidor
@@ -45,18 +45,18 @@ public class ControllerServer {
 	 * @return
 	 */
 	public String iniciaServer(int port, JTextArea textField, String grafo, String servidor){
-		try {     
+		try {
 			System.out.println("Incializando o servidor...");
 			textField.setText(textField.getText() + "Incializando o servidor... \n");
-			
+
 			ControllerDadosServer controllerDados = ControllerDadosServer.getInstance();
-			controllerDados.lerGrafo(grafo);
 			controllerDados.setSeuServer(servidor);
+			controllerDados.lerGrafo(grafo);
 			textField.setText(textField.getText() + "Destinos e trechos atualizados... \n");//atualiza as cidades e trechos pelo arquivo
 
 			ThreadConexaoRMI tConexaoRMI = new ThreadConexaoRMI(servidor,port+1000, textField);
 			tConexaoRMI.start();
-			
+
 			server = new ServerSocket(port);//instancia um socket server na porta desejada
 			System.out.println("Servidor iniciado, ouvindo a porta " + port);
 			textField.setText(textField.getText() + "Servidor iniciado, ouvindo a porta " + port);//indica que o servidor foi ligado em determinada porta

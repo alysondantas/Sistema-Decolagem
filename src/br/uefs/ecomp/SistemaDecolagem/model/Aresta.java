@@ -10,12 +10,14 @@ public class Aresta implements Serializable {
 	private int qtdPoltronas;
 	private int poltronasLivres;
 	private boolean passou;
+	private String nomeServer;
 	
-	public Aresta(Vertice destino, int qtdPoltronas){
+	public Aresta(Vertice destino, int qtdPoltronas, String nomeServer){
 		this.setDestino(destino);
 		this.qtdPoltronas = qtdPoltronas;
 		poltronasLivres = qtdPoltronas;
 		setPassou(false);
+		this.nomeServer = nomeServer;
 	}
 
 	public Vertice getDestino() {
@@ -56,5 +58,13 @@ public class Aresta implements Serializable {
 		}else{
 			poltronasLivres--;
 		}
+	}
+
+	public String getNomeServer() {
+		return nomeServer;
+	}
+
+	public void setNomeServer(String nomeServer) {
+		this.nomeServer = nomeServer;
 	}
 }
