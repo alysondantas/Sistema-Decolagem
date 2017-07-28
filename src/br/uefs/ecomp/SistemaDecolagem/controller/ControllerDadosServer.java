@@ -198,10 +198,12 @@ public class ControllerDadosServer {
 			}
 		}	
 	}
-	
+
 	public void syncGrafos() throws MalformedURLException, RemoteException, NotBoundException{
 		String nomeServidor1 = "servidor1";
 		String nomeServidor2 = "servidor2";
+		String lipServer1 = ipServer1;
+		String lipServer2 = ipServer2;
 		int lportServer2 = portServer2 + 1000;
 		int lportServer1 = portServer1 + 1000;
 		if(seuNomeServer.equals("servidor1")){
@@ -209,21 +211,27 @@ public class ControllerDadosServer {
 			nomeServidor2 = "servidor3";
 			lportServer1 = portServer2 + 1000;
 			lportServer2 = portServer3 + 1000;
+			lipServer1 = ipServer2;
+			lipServer2 = ipServer3;
 		}else if(seuNomeServer.equals("servidor2")){
 			nomeServidor1 = "servidor1";
 			nomeServidor2 = "servidor3";
 			lportServer1 = portServer1 + 1000;
 			lportServer2 = portServer3 + 1000;
+			lipServer1 = ipServer1;
+			lipServer2 = ipServer3;
 		}else if(seuNomeServer.equals("servidor3")){
 			nomeServidor1 = "servidor1";
 			nomeServidor2 = "servidor2";
 			lportServer1 = portServer1 + 1000;
 			lportServer2 = portServer2 + 1000;
+			lipServer1 = ipServer1;
+			lipServer2 = ipServer2;
 		}
-		
-		ConexaoRMI conexaoRMI1 = (ConexaoRMI) Naming.lookup( "rmi://"+ipServer1+":"+lportServer1+"/" + nomeServidor1);
+
+		ConexaoRMI conexaoRMI1 = (ConexaoRMI) Naming.lookup( "rmi://"+lipServer1+":"+lportServer1+"/" + nomeServidor1);
 		Grafo grafo1 = conexaoRMI1.getGrafo();
-		ConexaoRMI conexaoRMI2 = (ConexaoRMI) Naming.lookup( "rmi://"+ipServer2+":"+lportServer2+"/" + nomeServidor2);
+		ConexaoRMI conexaoRMI2 = (ConexaoRMI) Naming.lookup( "rmi://"+lipServer2+":"+lportServer2+"/" + nomeServidor2);
 		Grafo grafo2 = conexaoRMI2.getGrafo();
 		/*if(grafo1 != null && grafo2 != null){
 			System.out.println("Ja deu bom");
@@ -239,16 +247,18 @@ public class ControllerDadosServer {
 			System.out.println("Deu ruim");
 		}*/
 		grafoServers = new Grafo();
+
+
 		Iterator<Vertice> iteraGrafoS = grafoServers.iterador();
 		Iterator<Vertice> iteraGrafoM = grafo.iterador();
 		Iterator<Vertice> iteraGrafo1 = grafo1.iterador();
 		Iterator<Vertice> iteraGrafo2 = grafo2.iterador();
-		
+
 		List<Aresta> arestas;
 		List<Aresta> arestas2;
 		Iterator<Aresta> iteraAresta;
 		Aresta arestinha;
-		
+
 		Vertice aux = null;
 		Vertice aux2 = null;
 		boolean verifica = false;
@@ -258,22 +268,21 @@ public class ControllerDadosServer {
 				aux2 = iteraGrafoS.next();
 				if(aux.getNome().equals(aux2.getNome())){
 					verifica = true;
+					System.err.println("Vertice identico encontrado");
+					arestas = aux.getArestas();
+					arestas2 = aux2.getArestas();
+					iteraAresta = arestas.iterator();
+					while(iteraAresta.hasNext()){
+						arestinha = iteraAresta.next();
+						System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
+						arestas2.add(arestinha);
+					}
 					break;
 				}
 			}
 			if(verifica == false){
 				System.err.println("Novo vertice add " + aux.getNome());
 				grafoServers.inserirPonto(aux);
-			}else{
-				System.err.println("Vertice identico encontrado");
-				arestas = aux.getArestas();
-				arestas2 = aux2.getArestas();
-				iteraAresta = arestas.iterator();
-				while(iteraAresta.hasNext()){
-					arestinha = iteraAresta.next();
-					System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
-					arestas2.add(arestinha);
-				}
 			}
 			verifica = false;
 			iteraGrafoS = grafoServers.iterador();
@@ -282,28 +291,28 @@ public class ControllerDadosServer {
 		iteraGrafoS = grafoServers.iterador();
 		aux = null;
 		aux2 = null;
-		
+
 		while(iteraGrafo1.hasNext()){
 			aux = iteraGrafo1.next();
 			while(iteraGrafoS.hasNext()){
 				aux2 = iteraGrafoS.next();
 				if(aux.getNome().equals(aux2.getNome())){
 					verifica = true;
+					System.err.println("Vertice identico encontrado");
+					arestas = aux.getArestas();
+					arestas2 = aux2.getArestas();
+					iteraAresta = arestas.iterator();
+					while(iteraAresta.hasNext()){
+						arestinha = iteraAresta.next();
+						System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
+						arestas2.add(arestinha);
+					}
+					break;
 				}
 			}
 			if(verifica == false){
 				System.err.println("Novo vertice add " + aux.getNome());
 				grafoServers.inserirPonto(aux);
-			}else{
-				System.err.println("Vertice identico encontrado");
-				arestas = aux.getArestas();
-				arestas2 = aux2.getArestas();
-				iteraAresta = arestas.iterator();
-				while(iteraAresta.hasNext()){
-					arestinha = iteraAresta.next();
-					System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
-					arestas2.add(arestinha);
-				}
 			}
 			verifica = false;
 			iteraGrafoS = grafoServers.iterador();
@@ -312,35 +321,35 @@ public class ControllerDadosServer {
 		iteraGrafoS = grafoServers.iterador();
 		aux = null;
 		aux2 = null;
-		
+
 		while(iteraGrafo2.hasNext()){
 			aux = iteraGrafo2.next();
 			while(iteraGrafoS.hasNext()){
 				aux2 = iteraGrafoS.next();
 				if(aux.getNome().equals(aux2.getNome())){
 					verifica = true;
+					System.err.println("Vertice identico encontrado");
+					arestas = aux.getArestas();
+					arestas2 = aux2.getArestas();
+					iteraAresta = arestas.iterator();
+					while(iteraAresta.hasNext()){
+						arestinha = iteraAresta.next();
+						System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
+						arestas2.add(arestinha);
+					}
+					break;
 				}
 			}
 			if(verifica == false){
 				System.err.println("Novo vertice add " + aux.getNome());
 				grafoServers.inserirPonto(aux);
-			}else{
-				System.err.println("Vertice identico encontrado");
-				arestas = aux.getArestas();
-				arestas2 = aux2.getArestas();
-				iteraAresta = arestas.iterator();
-				while(iteraAresta.hasNext()){
-					arestinha = iteraAresta.next();
-					System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
-					arestas2.add(arestinha);
-				}
 			}
 			verifica = false;
 			iteraGrafoS = grafoServers.iterador();
 		}
-		
+
 		iteraGrafoS = grafoServers.iterador();
-		
+
 		while(iteraGrafoS.hasNext()){
 			aux = iteraGrafoS.next();
 			System.out.println("Vertice: " + aux.getNome());
@@ -350,7 +359,7 @@ public class ControllerDadosServer {
 				System.err.println("Aresta para " + arestinha.getDestino().getNome() + " do server " + arestinha.getNomeServer() + " de " + aux.getNome());
 			}
 		}
-		
+
 	}
 
 	public String getSeuServer() {
@@ -360,10 +369,60 @@ public class ControllerDadosServer {
 	public void setSeuServer(String seuServer) {
 		this.seuNomeServer = seuServer;
 	}
-	
+
 	public Grafo getGrafo(){
 		return grafo;
 	}
+
+	public String getIpServer1() {
+		return ipServer1;
+	}
+
+	public void setIpServer1(String ipServer3) {
+		this.ipServer1 = ipServer3;
+	}
+
+	public String getIpServer2() {
+		return ipServer2;
+	}
+
+	public void setIpServer2(String ipServer3) {
+		this.ipServer2 = ipServer3;
+	}
+
+	public String getIpServer3() {
+		return ipServer3;
+	}
+
+	public void setIpServer3(String ipServer3) {
+		this.ipServer3 = ipServer3;
+	}
+
+	public int getPortaServer1(){
+		return portServer1;
+	}
+
+	public int getPortaServer2(){
+		return portServer2;
+	}
+
+	public int getPortaServer3(){
+		return portServer3;
+	}
+
+	public void setPortaServer1(int porta){
+		this.portServer1 = porta;
+	}
+
+	public void setPortaServer2(int porta){
+		this.portServer2 = porta;
+	}
+
+	public void setPortaServer3(int porta){
+		this.portServer3 = porta;
+	}
+
+
 
 
 
