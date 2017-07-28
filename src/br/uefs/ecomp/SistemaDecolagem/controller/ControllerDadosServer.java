@@ -199,6 +199,12 @@ public class ControllerDadosServer {
 		}	
 	}
 
+	/**
+	 * Metodo que sincroniza os Grafos dos 3 servidores
+	 * @throws MalformedURLException
+	 * @throws RemoteException
+	 * @throws NotBoundException
+	 */
 	public void syncGrafos() throws MalformedURLException, RemoteException, NotBoundException{
 		String nomeServidor1 = "servidor1";
 		String nomeServidor2 = "servidor2";
@@ -240,6 +246,7 @@ public class ControllerDadosServer {
 		mesclaGrafo(grafoServers,grafo1);
 		mesclaGrafo(grafoServers,grafo2);
 
+		//Printa o novo grafo
 		Iterator<Vertice> iteraGrafoS = grafoServers.iterador();
 		Vertice aux = null;
 		Iterator<Aresta> iteraAresta;
@@ -250,11 +257,16 @@ public class ControllerDadosServer {
 			iteraAresta = aux.getArestas().iterator();
 			while(iteraAresta.hasNext()){
 				arestinha = iteraAresta.next();
-				System.err.println("Aresta para " + arestinha.getDestino().getNome() + " do server " + arestinha.getNomeServer() + " de " + aux.getNome());
+				System.out.println("Aresta para " + arestinha.getDestino().getNome() + " do server " + arestinha.getNomeServer() + " de " + aux.getNome());
 			}
 		}
 	}
 	
+	/**
+	 * Metodo que mescla dois grafos em um
+	 * @param principal
+	 * @param pequeno
+	 */
 	public void mesclaGrafo(Grafo principal, Grafo pequeno){
 		Iterator<Vertice> iteraGrafoS = principal.iterador();
 		Iterator<Vertice> iteraGrafoM = pequeno.iterador();
@@ -273,22 +285,24 @@ public class ControllerDadosServer {
 				aux2 = iteraGrafoS.next();
 				if(aux.getNome().equals(aux2.getNome())){
 					verifica = true;
-					System.err.println("Vertice identico encontrado");
+					System.out.println("Vertice identico encontrado" + aux.getNome());
 					arestas = aux.getArestas();
 					arestas2 = aux2.getArestas();
 					iteraAresta = arestas.iterator();
 					while(iteraAresta.hasNext()){
 						arestinha = iteraAresta.next();
-						System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
-						if(!verificaArestaIgual(grafoServers, arestinha)){
+						if(!verificaArestaIgual(grafoServers, arestinha, aux)){
 							arestas2.add(arestinha);
+							System.out.println("Nova rota de"+aux2.getNome() + " para "+arestinha.getDestino().getNome());
+						}else{
+							System.out.println("Nao add rota de"+aux2.getNome() + " para "+arestinha.getDestino().getNome());
 						}
 					}
 					break;
 				}
 			}
 			if(verifica == false){
-				System.err.println("Novo vertice add " + aux.getNome());
+				System.out.println("Novo vertice add " + aux.getNome());
 				grafoServers.inserirPonto(aux);
 			}
 			verifica = false;
@@ -296,7 +310,13 @@ public class ControllerDadosServer {
 		}
 	}
 	
-	public boolean verificaArestaIgual(Grafo g, Aresta a){
+	/**
+	 * Metodo que verifica se ja existe essa aresta no grafo
+	 * @param grafo
+	 * @param aresta
+	 * @return
+	 */
+	public boolean verificaArestaIgual(Grafo g, Aresta a, Vertice vertice){
 		Iterator<Vertice> iteraV = g.iterador();
 		Vertice v;
 		List<Aresta> listA;
@@ -308,7 +328,10 @@ public class ControllerDadosServer {
 			iteraA = listA.iterator();
 			while(iteraA.hasNext()){
 				aux = iteraA.next();
-				if(aux.getNomeServer().equals(a.getNomeServer()) && aux.getDestino().getNome().equals(a.getDestino().getNome())){
+				if(v.getNome().equals(vertice.getNome()) && aux.getNomeServer().equals(a.getNomeServer()) && aux.getDestino().getNome().equals(a.getDestino().getNome())){
+					System.out.println("origem " + v.getNome() + " | " + vertice.getNome());
+					System.out.println("nome server" + aux.getNomeServer() +" | " +  a.getNomeServer());
+					System.out.println("destino " + aux.getDestino().getNome() + " | " + a.getDestino().getNome());
 					return true;
 				}
 			}
