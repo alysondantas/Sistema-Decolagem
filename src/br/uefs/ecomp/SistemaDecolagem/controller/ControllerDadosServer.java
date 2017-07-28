@@ -22,9 +22,10 @@ import java.util.regex.Pattern;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CadastroJaExistenteException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.OrigemDestinoIguaisException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.VerticeNaoEncontradoException;
 import br.uefs.ecomp.SistemaDecolagem.model.*;
-import br.uefs.ecomp.SistemaDecolagem.threads.ThreadConexaoRMI;
 import br.uefs.ecomp.SistemaDecolagem.util.ConexaoRMI;
 
 public class ControllerDadosServer {
@@ -193,10 +194,14 @@ public class ControllerDadosServer {
 					System.out.println("Novo trecho de " + origem.getNome() + " para " + destino.getNome() + " com " + nova.getPoltronasLivres() + " proltronas para o server " + seuNomeServer);
 					origem.addAresta(nova);
 				}else{
-					throw new OperacaoInvalidaException();
+					extracted();
 				}
 			}
 		}	
+	}
+
+	private void extracted() throws OperacaoInvalidaException {
+		throw new OperacaoInvalidaException();
 	}
 
 	/**
@@ -337,6 +342,12 @@ public class ControllerDadosServer {
 			}
 		}
 		return false;
+	}
+	
+	
+	public void testeCaminho() throws CloneNotSupportedException, OrigemDestinoIguaisException, VerticeNaoEncontradoException{
+		Caminho caminho = new Caminho("A","E");
+		caminho.criaCaminho();
 	}
 
 	public String getSeuServer() {

@@ -7,7 +7,7 @@ import java.util.List;
 
 import br.uefs.ecomp.SistemaDecolagem.util.IGrafo;
 
-public class Grafo implements IGrafo, Serializable {
+public class Grafo implements IGrafo, Serializable,Cloneable  {
 
 	private static final long serialVersionUID = 1L;
 	private List<Vertice> vertices;
@@ -57,4 +57,9 @@ public class Grafo implements IGrafo, Serializable {
 		}
 		return null;
 	}
+	
+	 @Override
+	    public Grafo clone() throws CloneNotSupportedException {
+	        return (Grafo) super.clone();
+	    }
 }

@@ -15,6 +15,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerDadosServer;
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerServer;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.OrigemDestinoIguaisException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.VerticeNaoEncontradoException;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -44,6 +46,7 @@ public class ServerGUI {
 	private JTextField textFieldS3Porta;
 	private JButton btnAtualizar;
 	private ControllerDadosServer controllerD = ControllerDadosServer.getInstance();
+	private JButton btnNewButton;
 
 	/**
 	 * Launch the application.
@@ -141,6 +144,29 @@ public class ServerGUI {
 		panel.add(rdbtnServidor);
 		rdbtnServidor.setSelected(true);
 		tipo.add(rdbtnServidor);
+		
+		btnNewButton = new JButton("New button");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					
+					controllerD.testeCaminho();
+					
+				} catch (CloneNotSupportedException e) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null,"Nao clonou!","Erro!",2);//exibe recebido
+					e.printStackTrace();
+				}catch (OrigemDestinoIguaisException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (VerticeNaoEncontradoException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnNewButton.setBounds(127, 187, 89, 23);
+		panel.add(btnNewButton);
 		btnStartServer.addActionListener(new ActionListener() {
 			
 			@Override
