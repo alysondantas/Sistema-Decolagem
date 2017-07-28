@@ -275,7 +275,9 @@ public class ControllerDadosServer {
 					while(iteraAresta.hasNext()){
 						arestinha = iteraAresta.next();
 						System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
-						arestas2.add(arestinha);
+						if(!verificaArestaIgual(grafoServers, arestinha)){
+							arestas2.add(arestinha);
+						}
 					}
 					break;
 				}
@@ -305,7 +307,9 @@ public class ControllerDadosServer {
 					while(iteraAresta.hasNext()){
 						arestinha = iteraAresta.next();
 						System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
-						arestas2.add(arestinha);
+						if(!verificaArestaIgual(grafoServers, arestinha)){
+							arestas2.add(arestinha);
+						}
 					}
 					break;
 				}
@@ -335,7 +339,9 @@ public class ControllerDadosServer {
 					while(iteraAresta.hasNext()){
 						arestinha = iteraAresta.next();
 						System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
-						arestas2.add(arestinha);
+						if(!verificaArestaIgual(grafoServers, arestinha)){
+							arestas2.add(arestinha);
+						}
 					}
 					break;
 				}
@@ -360,6 +366,26 @@ public class ControllerDadosServer {
 			}
 		}
 
+	}
+	
+	public boolean verificaArestaIgual(Grafo g, Aresta a){
+		Iterator<Vertice> iteraV = g.iterador();
+		Vertice v;
+		List<Aresta> listA;
+		Iterator<Aresta> iteraA;
+		Aresta aux;
+		while(iteraV.hasNext()){
+			v = iteraV.next();
+			listA = v.getArestas();
+			iteraA = listA.iterator();
+			while(iteraA.hasNext()){
+				aux = iteraA.next();
+				if(aux.getNomeServer().equals(a.getNomeServer()) && aux.getDestino().getNome().equals(a.getDestino().getNome())){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public String getSeuServer() {
