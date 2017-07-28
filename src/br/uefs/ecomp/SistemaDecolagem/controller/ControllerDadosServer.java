@@ -233,27 +233,31 @@ public class ControllerDadosServer {
 		Grafo grafo1 = conexaoRMI1.getGrafo();
 		ConexaoRMI conexaoRMI2 = (ConexaoRMI) Naming.lookup( "rmi://"+lipServer2+":"+lportServer2+"/" + nomeServidor2);
 		Grafo grafo2 = conexaoRMI2.getGrafo();
-		/*if(grafo1 != null && grafo2 != null){
-			System.out.println("Ja deu bom");
-			Iterator<Vertice> itera = grafo1.iterador();
-			Vertice aux;
-			System.err.println("Pontos do grafo obtido:");
-			while(itera.hasNext()){
-				aux = itera.next();
-				System.out.println("" + aux.getNome());
-			}
-			System.err.println("Acabou tio");
-		}else{
-			System.out.println("Deu ruim");
-		}*/
+
 		grafoServers = new Grafo();
 
+		mesclaGrafo(grafoServers,grafo);
+		mesclaGrafo(grafoServers,grafo1);
+		mesclaGrafo(grafoServers,grafo2);
 
 		Iterator<Vertice> iteraGrafoS = grafoServers.iterador();
-		Iterator<Vertice> iteraGrafoM = grafo.iterador();
-		Iterator<Vertice> iteraGrafo1 = grafo1.iterador();
-		Iterator<Vertice> iteraGrafo2 = grafo2.iterador();
-
+		Vertice aux = null;
+		Iterator<Aresta> iteraAresta;
+		Aresta arestinha = null;
+		while(iteraGrafoS.hasNext()){
+			aux = iteraGrafoS.next();
+			System.out.println("Vertice: " + aux.getNome());
+			iteraAresta = aux.getArestas().iterator();
+			while(iteraAresta.hasNext()){
+				arestinha = iteraAresta.next();
+				System.err.println("Aresta para " + arestinha.getDestino().getNome() + " do server " + arestinha.getNomeServer() + " de " + aux.getNome());
+			}
+		}
+	}
+	
+	public void mesclaGrafo(Grafo principal, Grafo pequeno){
+		Iterator<Vertice> iteraGrafoS = principal.iterador();
+		Iterator<Vertice> iteraGrafoM = pequeno.iterador();
 		List<Aresta> arestas;
 		List<Aresta> arestas2;
 		Iterator<Aresta> iteraAresta;
@@ -262,6 +266,7 @@ public class ControllerDadosServer {
 		Vertice aux = null;
 		Vertice aux2 = null;
 		boolean verifica = false;
+		
 		while(iteraGrafoM.hasNext()){
 			aux = iteraGrafoM.next();
 			while(iteraGrafoS.hasNext()){
@@ -289,83 +294,6 @@ public class ControllerDadosServer {
 			verifica = false;
 			iteraGrafoS = grafoServers.iterador();
 		}
-		verifica = false;
-		iteraGrafoS = grafoServers.iterador();
-		aux = null;
-		aux2 = null;
-
-		while(iteraGrafo1.hasNext()){
-			aux = iteraGrafo1.next();
-			while(iteraGrafoS.hasNext()){
-				aux2 = iteraGrafoS.next();
-				if(aux.getNome().equals(aux2.getNome())){
-					verifica = true;
-					System.err.println("Vertice identico encontrado");
-					arestas = aux.getArestas();
-					arestas2 = aux2.getArestas();
-					iteraAresta = arestas.iterator();
-					while(iteraAresta.hasNext()){
-						arestinha = iteraAresta.next();
-						System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
-						if(!verificaArestaIgual(grafoServers, arestinha)){
-							arestas2.add(arestinha);
-						}
-					}
-					break;
-				}
-			}
-			if(verifica == false){
-				System.err.println("Novo vertice add " + aux.getNome());
-				grafoServers.inserirPonto(aux);
-			}
-			verifica = false;
-			iteraGrafoS = grafoServers.iterador();
-		}
-		verifica = false;
-		iteraGrafoS = grafoServers.iterador();
-		aux = null;
-		aux2 = null;
-
-		while(iteraGrafo2.hasNext()){
-			aux = iteraGrafo2.next();
-			while(iteraGrafoS.hasNext()){
-				aux2 = iteraGrafoS.next();
-				if(aux.getNome().equals(aux2.getNome())){
-					verifica = true;
-					System.err.println("Vertice identico encontrado");
-					arestas = aux.getArestas();
-					arestas2 = aux2.getArestas();
-					iteraAresta = arestas.iterator();
-					while(iteraAresta.hasNext()){
-						arestinha = iteraAresta.next();
-						System.err.println("Nova rota para "+arestinha.getDestino().getNome() + " add no vertice");
-						if(!verificaArestaIgual(grafoServers, arestinha)){
-							arestas2.add(arestinha);
-						}
-					}
-					break;
-				}
-			}
-			if(verifica == false){
-				System.err.println("Novo vertice add " + aux.getNome());
-				grafoServers.inserirPonto(aux);
-			}
-			verifica = false;
-			iteraGrafoS = grafoServers.iterador();
-		}
-
-		iteraGrafoS = grafoServers.iterador();
-
-		while(iteraGrafoS.hasNext()){
-			aux = iteraGrafoS.next();
-			System.out.println("Vertice: " + aux.getNome());
-			iteraAresta = aux.getArestas().iterator();
-			while(iteraAresta.hasNext()){
-				arestinha = iteraAresta.next();
-				System.err.println("Aresta para " + arestinha.getDestino().getNome() + " do server " + arestinha.getNomeServer() + " de " + aux.getNome());
-			}
-		}
-
 	}
 	
 	public boolean verificaArestaIgual(Grafo g, Aresta a){
