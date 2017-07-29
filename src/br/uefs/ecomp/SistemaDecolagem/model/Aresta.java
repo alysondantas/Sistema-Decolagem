@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 
-public class Aresta implements Serializable {
+public class Aresta implements Serializable,Cloneable {
 	private static final long serialVersionUID = 1L;
 	private Vertice destino;
 	private int qtdPoltronas;
@@ -66,5 +66,10 @@ public class Aresta implements Serializable {
 
 	public void setNomeServer(String nomeServer) {
 		this.nomeServer = nomeServer;
+	}
+	
+	@Override
+	public Aresta clone() throws CloneNotSupportedException {
+		return (Aresta) super.clone();
 	}
 }

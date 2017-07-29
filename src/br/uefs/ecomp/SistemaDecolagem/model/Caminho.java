@@ -21,7 +21,7 @@ public class Caminho {
 		this.geral = "";
 		this.destinoS = destino;
 		superiores = new ArrayList<Vertice>();
-		grafo = ControllerDadosServer.getInstance().getGrafoServer().clone();
+		grafo = ControllerDadosServer.getInstance().getGrafoServer().clonado();
 	}
 
 	public void criaCaminho() throws OrigemDestinoIguaisException, VerticeNaoEncontradoException{

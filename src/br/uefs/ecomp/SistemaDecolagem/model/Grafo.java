@@ -15,7 +15,7 @@ public class Grafo implements IGrafo, Serializable,Cloneable  {
 	public Grafo(){
 		vertices = new ArrayList<>();
 	}
-	
+
 	@Override
 	public int obterTamanho() {
 		return vertices.size();
@@ -57,9 +57,61 @@ public class Grafo implements IGrafo, Serializable,Cloneable  {
 		}
 		return null;
 	}
+
+	@Override
+	public Grafo clone() throws CloneNotSupportedException {
+		return (Grafo) super.clone();
+	}
 	
-	 @Override
-	    public Grafo clone() throws CloneNotSupportedException {
-	        return (Grafo) super.clone();
-	    }
+	public Grafo clonado() throws CloneNotSupportedException{
+		Grafo g = new Grafo();
+		Iterator<Vertice> iteraG1 = vertices.iterator();
+		Iterator<Aresta> iteraA1;
+		Vertice v;
+		while(iteraG1.hasNext()){
+			v = iteraG1.next();
+			Vertice cloneV = new Vertice(v.getNome());
+			g.inserirPonto(cloneV);
+		}
+		
+		iteraG1 = g.iterador();
+		Vertice auxV;
+		Vertice destino;
+		Aresta auxA;
+		while(iteraG1.hasNext()){
+			v = iteraG1.next();
+			auxV = getVertice(v.getNome());
+			iteraA1 = auxV.getArestas().iterator();
+			while(iteraA1.hasNext()){
+				auxA = iteraA1.next();
+				destino = g.getVertice(auxA.getDestino().getNome());
+				Aresta a = new Aresta(destino, auxA.getQtdPoltronas(), auxA.getNomeServer());
+				v.addAresta(a);
+			}
+		}
+		
+		/*ArrayList<Vertice> verticinhos = (ArrayList<Vertice>) g.vertices;
+		ArrayList<Vertice> clonedList = new ArrayList<Vertice>();
+		clonedList.addAll(verticinhos);
+		ArrayList<Aresta> arestinhas;
+		Iterator<Vertice> iteraV = clonedList.iterator();
+		Iterator<Aresta> iteraA;
+		Vertice v;
+		Aresta a;
+		while(iteraV.hasNext()){
+			v = iteraV.next();
+			arestinhas = (ArrayList<Aresta>) v.getArestas();
+			ArrayList<Aresta> clonedArestas = new ArrayList<Aresta>();
+			iteraA = arestinhas.iterator();
+			while(iteraA.hasNext()){
+				a = iteraA.next();
+				Aresta aClone = a.clone();
+				clonedArestas.add(aClone);
+			}
+			v.setArestas(clonedArestas);
+		}
+		g.vertices = clonedList;
+		*/
+		return g;
+	}
 }
