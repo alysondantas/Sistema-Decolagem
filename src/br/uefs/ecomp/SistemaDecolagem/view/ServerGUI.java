@@ -188,6 +188,9 @@ public class ServerGUI {
 				} catch (NotBoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (VerticeNaoEncontradoException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		});

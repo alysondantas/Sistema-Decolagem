@@ -35,11 +35,11 @@ public class ControllerDadosServer {
 	private Grafo grafoServers;
 	private String seuNomeServer;
 	private int portServer1 = 1099;
-	private String ipServer1 = "192.168.15.4";
+	private String ipServer1 = "192.168.22.102";
 	private int portServer2 = 1100;
-	private String ipServer2 = "192.168.15.4";
+	private String ipServer2 = "192.168.22.102";
 	private int portServer3 = 1101;
-	private String ipServer3 = "192.168.15.4";
+	private String ipServer3 = "192.168.22.102";
 
 
 	/**
@@ -209,8 +209,9 @@ public class ControllerDadosServer {
 	 * @throws MalformedURLException
 	 * @throws RemoteException
 	 * @throws NotBoundException
+	 * @throws VerticeNaoEncontradoException 
 	 */
-	public void syncGrafos() throws MalformedURLException, RemoteException, NotBoundException{
+	public void syncGrafos() throws MalformedURLException, RemoteException, NotBoundException, VerticeNaoEncontradoException{
 		String nomeServidor1 = "servidor1";
 		String nomeServidor2 = "servidor2";
 		String lipServer1 = ipServer1;
@@ -250,7 +251,9 @@ public class ControllerDadosServer {
 		mesclaGrafo(grafoServers,grafo);
 		mesclaGrafo(grafoServers,grafo1);
 		mesclaGrafo(grafoServers,grafo2);
-
+		
+		organiza();
+		
 		//Printa o novo grafo
 		Iterator<Vertice> iteraGrafoS = grafoServers.iterador();
 		Vertice aux = null;
@@ -344,6 +347,29 @@ public class ControllerDadosServer {
 		return false;
 	}
 	
+	public void organiza() throws VerticeNaoEncontradoException{
+		Iterator<Vertice> iteraVertice = grafoServers.iterador();
+		Iterator<Aresta> iteraAresta;
+		Vertice v;
+		List<Aresta> arestas;
+		Aresta a;
+		Vertice aux;
+		while(iteraVertice.hasNext()){
+			v = iteraVertice.next();
+			arestas = v.getArestas();
+			iteraAresta = arestas.iterator();
+			while(iteraAresta.hasNext()){
+				a = iteraAresta.next();
+				aux = grafoServers.getVertice(a.getDestino().getNome());
+				if(aux != null){
+					a.setDestino(aux);
+				}else{
+					throw new VerticeNaoEncontradoException();
+				}
+			}
+		}
+	}
+	
 	
 	public void testeCaminho() throws CloneNotSupportedException, OrigemDestinoIguaisException, VerticeNaoEncontradoException{
 		Caminho caminho = new Caminho("A","E");
@@ -410,7 +436,9 @@ public class ControllerDadosServer {
 		this.portServer3 = porta;
 	}
 
-
+	public Grafo getGrafoServer(){
+		return grafoServers;
+	}
 
 
 
