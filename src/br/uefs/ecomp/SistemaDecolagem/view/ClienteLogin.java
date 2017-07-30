@@ -19,10 +19,11 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 
 public class ClienteLogin {
-
+	
 	private JFrame frame;
 	private JTextField textField;
 	private JTextField textField_1;
@@ -128,6 +129,26 @@ public class ClienteLogin {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.setBounds(10, 130, 89, 23);
 		panel.add(btnLogin);
+		
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg1){
+				try {
+					if(controller.estaLogado(passwordFieldSenha.getText(),textFieldUser.getText())==true){
+						ClienteGui ClienteGui = new ClienteGui();
+					}
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
 		
 		JButton btnCadastrar = new JButton("Cadastrar");
 		btnCadastrar.addActionListener(new ActionListener() {
