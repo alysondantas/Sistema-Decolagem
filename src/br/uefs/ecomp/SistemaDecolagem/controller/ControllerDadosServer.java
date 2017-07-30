@@ -347,6 +347,10 @@ public class ControllerDadosServer {
 		return false;
 	}
 	
+	/**
+	 * Metodo que organiza os vertices
+	 * @throws VerticeNaoEncontradoException
+	 */
 	public void organiza() throws VerticeNaoEncontradoException{
 		Iterator<Vertice> iteraVertice = grafoServers.iterador();
 		Iterator<Aresta> iteraAresta;
