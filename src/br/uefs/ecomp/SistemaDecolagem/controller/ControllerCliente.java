@@ -94,21 +94,20 @@ public class ControllerCliente {
 		
 		Socket rec = new Socket(ip,porta);//cria o socket de conexão para busca.
 		
-		ObjectOutputStream saida = new ObjectOutputStream(rec.getOutputStream());
-		saida.writeObject(pack);
+		ObjectOutputStream saida = new ObjectOutputStream(rec.getOutputStream());//objeto de saida.
+		saida.writeObject(pack);//envia o objeto.
 		saida.flush();
 		
-		ObjectInputStream entrada = new ObjectInputStream(rec.getInputStream());
+		ObjectInputStream entrada = new ObjectInputStream(rec.getInputStream());//objeto de entrada.
 		String recebido = (String) entrada.readObject();
 		saida.close();
 		entrada.close();
 		rec.close();
 		
-		String login [] = recebido.split("|");// pega a string recebida com login e senha.
-		if(login[0].equals(nome) && login[1].equals(senha)){//retorna verdadeiro ou falso caso haja uma conta no servidor.
+		if(recebido.equals("concluido")){//retorna verdadeiro ou falso caso haja uma conta no servidor.
 			return true;
 		}	
-		else return false;
+		else {return false;}
 	}
 	
 	
