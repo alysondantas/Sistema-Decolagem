@@ -6,6 +6,18 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/**
+ * @author Nilo
+ *
+ */
+/**
+ * @author Nilo
+ *
+ */
+/**
+ * @author Nilo
+ *
+ */
 public class ControllerCliente {
 	
 	private static ControllerCliente unicaInstancia;
@@ -65,6 +77,38 @@ public class ControllerCliente {
 		rec.close();
 
 		return recebido;
+	}
+	
+
+	/**
+	 * Metódo que envia ao servidor informação de login e verifica se está logado ou não.
+	 * @param senha
+	 * @param nome
+	 * @return boolean
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public boolean estaLogado(String senha, String nome)throws UnknownHostException, IOException, ClassNotFoundException{
+		String pack = "1|" + nome + "|" + senha;//Envia 1 para logar no servidor.
+		
+		Socket rec = new Socket(ip,porta);//cria o socket de conexão para busca.
+		
+		ObjectOutputStream saida = new ObjectOutputStream(rec.getOutputStream());
+		saida.writeObject(pack);
+		saida.flush();
+		
+		ObjectInputStream entrada = new ObjectInputStream(rec.getInputStream());
+		String recebido = (String) entrada.readObject();
+		saida.close();
+		entrada.close();
+		rec.close();
+		
+		String login [] = recebido.split("|");// pega a string recebida com login e senha.
+		if(login[0].equals(nome) && login[1].equals(senha)){//retorna verdadeiro ou falso caso haja uma conta no servidor.
+			return true;
+		}	
+		else return false;
 	}
 	
 	
