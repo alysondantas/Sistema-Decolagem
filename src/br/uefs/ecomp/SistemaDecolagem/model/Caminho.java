@@ -86,6 +86,11 @@ public class Caminho {
 					//superiores.add(atual);//previne a volta de uma aresta de um ponto para ele mesmo
 					//trajeto.remove(ultimo);
 					vaiFundo(atual,destino,reserva,reserva,anterior,anterior);
+					//superiores.remove(atual);
+					System.out.println("Removeu dos superiores " + atual.getNome());
+					if(anterior!=null && anterior.getDestino()!=null){
+						anterior.getDestino().setPassou(false);
+					}
 					aux.setPassou(false);
 					return;
 				}else{
@@ -99,11 +104,17 @@ public class Caminho {
 					vaiFundo(aux.getDestino(),destino,s,reserva,t,anterior);
 					trajeto.remove(t);
 					superiores.remove(atual);
+					if(anterior!=null && anterior.getDestino()!=null){
+						anterior.getDestino().setPassou(false);
+						ultimo.getDestino().setPassou(false);
+					}
 					System.out.println("Removeu dos superiores " + atual.getNome());
 					System.out.println("Voltou para " + atual.getNome());
 				}
 			}
 		}
+		//superiores.remove(atual);
+		System.out.println("Removeu dos superiores " + atual.getNome());
 		return;
 	}
 }

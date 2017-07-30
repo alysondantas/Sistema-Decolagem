@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
-
 public class Vertice implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String nome;
