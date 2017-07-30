@@ -82,9 +82,9 @@ public class Caminho {
 						auxT = iteraT.next();
 						geral = geral + auxT.getOrigem().getNome() + "!" + auxT.getDestino().getDestino().getNome() + "!" + auxT.getDestino().getNomeServer() + "!";
 					}
-					 geral = geral + atual.getNome() + "!" + aux.getDestino().getNome() +"!" + aux.getNomeServer() + "$";
+					geral = geral + atual.getNome() + "!" + aux.getDestino().getNome() +"!" + aux.getNomeServer() + "$";
 					//superiores.add(atual);//previne a volta de uma aresta de um ponto para ele mesmo
-					 //trajeto.remove(ultimo);
+					//trajeto.remove(ultimo);
 					vaiFundo(atual,destino,reserva,reserva,anterior,anterior);
 					aux.setPassou(false);
 					return;
