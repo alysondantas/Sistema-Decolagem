@@ -134,7 +134,9 @@ public class ClienteLogin {
 			public void actionPerformed(ActionEvent arg1){
 				try {
 					if(controller.estaLogado(passwordFieldSenha.getText(),textFieldUser.getText())==true){
-						ClienteGui ClienteGui = new ClienteGui();
+						ClienteGui clienteGui = new ClienteGui();
+						clienteGui.setVisible(true);
+						
 					}
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
