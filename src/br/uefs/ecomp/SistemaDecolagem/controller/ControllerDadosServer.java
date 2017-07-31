@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -374,7 +375,63 @@ public class ControllerDadosServer {
 		}
 	}
 	
+	/**
+	 * Metodo que solicita todos os vertices
+	 * @return
+	 */
+	public String solicitaTodosVertices(){
+		Iterator<Vertice> iteraV = grafoServers.iterador();
+		Vertice aux;
+		String todos = "";
+		while(iteraV.hasNext()){
+			aux = iteraV.next();
+			todos = todos + aux.getNome() + "$";
+			if(!iteraV.hasNext()){
+				todos = todos + aux.getNome() + "$";
+			}else{
+				todos = todos + aux.getNome();
+			}
+		}
+		return todos;
+	}
 	
+	public String getTrajeto(String origem, String destino) throws CloneNotSupportedException, OrigemDestinoIguaisException, VerticeNaoEncontradoException{
+		Caminho caminho = new Caminho(origem,destino);
+		String s = caminho.criaCaminho();
+		String informacoes[] = s.split(Pattern.quote("$"));
+		int i;
+		List<String> correcao = new ArrayList<String>();
+		Iterator<String> iteraC;
+		String aux;
+		boolean verifica = false;
+		for(i = 0; i < informacoes.length ; i++){
+			if(!informacoes[i].equals("")){
+				iteraC = correcao.iterator();
+				while(iteraC.hasNext()){
+					aux = iteraC.next();
+					if(aux.equals(informacoes[i])){
+						verifica = true;
+					}
+				}
+				if(verifica == false){
+					correcao.add(informacoes[i]);
+				}else{
+					verifica = false;
+				}
+			}
+		}
+		String corrigida = "";
+		iteraC = correcao.iterator();
+		while(iteraC.hasNext()){
+			aux = iteraC.next();
+			corrigida = corrigida + aux;
+			if(iteraC.hasNext()){
+				corrigida = corrigida + "$";
+			}
+		}
+		System.out.println("Correção " + corrigida);
+		return corrigida;
+	}
 	
 	public void testeCaminho() throws CloneNotSupportedException, OrigemDestinoIguaisException, VerticeNaoEncontradoException{
 		Caminho caminho = new Caminho("A","E");

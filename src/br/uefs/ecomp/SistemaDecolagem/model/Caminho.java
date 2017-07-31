@@ -25,7 +25,7 @@ public class Caminho {
 		grafo = ControllerDadosServer.getInstance().getGrafoServer().clonado();
 	}
 
-	public void criaCaminho() throws OrigemDestinoIguaisException, VerticeNaoEncontradoException{
+	public String criaCaminho() throws OrigemDestinoIguaisException, VerticeNaoEncontradoException{
 		if(origemS.equals(destinoS)){
 			throw new OrigemDestinoIguaisException();
 		}
@@ -43,6 +43,7 @@ public class Caminho {
 		Trajeto t2 = null;
 		vaiFundo(origem,destino,s,reserva,t, t2);
 		System.out.println(geral);
+		return geral;
 	}
 
 	public void vaiFundo(Vertice atual, Vertice destino, String s, String reserva, Trajeto ultimo, Trajeto anterior){

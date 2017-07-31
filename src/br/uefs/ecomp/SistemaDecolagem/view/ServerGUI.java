@@ -150,7 +150,7 @@ public class ServerGUI {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					
-					controllerD.testeCaminho();
+					controllerD.getTrajeto("Y", "C");
 					
 				} catch (CloneNotSupportedException e) {
 					// TODO Auto-generated catch block
