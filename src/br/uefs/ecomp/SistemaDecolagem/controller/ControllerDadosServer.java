@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CadastroJaExistenteException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
@@ -253,9 +252,9 @@ public class ControllerDadosServer {
 		mesclaGrafo(grafoServers,grafo);
 		mesclaGrafo(grafoServers,grafo1);
 		mesclaGrafo(grafoServers,grafo2);
-		
+
 		organiza();
-		
+
 		//Printa o novo grafo
 		Iterator<Vertice> iteraGrafoS = grafoServers.iterador();
 		Vertice aux = null;
@@ -271,7 +270,7 @@ public class ControllerDadosServer {
 			}
 		}
 	}
-	
+
 	/**
 	 * Metodo que mescla dois grafos em um
 	 * @param principal
@@ -288,7 +287,7 @@ public class ControllerDadosServer {
 		Vertice aux = null;
 		Vertice aux2 = null;
 		boolean verifica = false;
-		
+
 		while(iteraGrafoM.hasNext()){
 			aux = iteraGrafoM.next();
 			while(iteraGrafoS.hasNext()){
@@ -319,7 +318,7 @@ public class ControllerDadosServer {
 			iteraGrafoS = grafoServers.iterador();
 		}
 	}
-	
+
 	/**
 	 * Metodo que verifica se ja existe essa aresta no grafo
 	 * @param grafo
@@ -348,7 +347,7 @@ public class ControllerDadosServer {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Metodo que organiza os vertices
 	 * @throws VerticeNaoEncontradoException
@@ -375,7 +374,7 @@ public class ControllerDadosServer {
 			}
 		}
 	}
-	
+
 	/**
 	 * Metodo que solicita todos os vertices
 	 * @return
@@ -395,7 +394,7 @@ public class ControllerDadosServer {
 		}
 		return todos;
 	}
-	
+
 	/**
 	 * Metodo que retorna o trajeto entre dois pontos
 	 * @param origem
@@ -442,25 +441,45 @@ public class ControllerDadosServer {
 		System.out.println("Correção " + corrigida);
 		return corrigida;
 	}
-	
-	public boolean compraCaminho(String cliente, String origem,String destino, String servidor) throws CampoVazioException, SemVagasException, OperacaoInvalidaException{
+
+	public boolean compraCaminho(String cliente, String origem,String destino, String servidor) throws CampoVazioException, SemVagasException, OperacaoInvalidaException, FileNotFoundException, ClassNotFoundException, IOException{
 		if(origem == null || origem.equals("") || destino == null || destino.equals("") || servidor == null || servidor.equals("") || cliente == null || cliente.equals("")){
 			throw new CampoVazioException();
 		}
-		
+
 		if(servidor.equals(seuNomeServer)){
 			Aresta aresta = grafo.getAresta(origem, destino);
 			if(aresta.getPoltronasLivres()<1){
+				//add na fila de espera
 				throw new SemVagasException();
 			}else{
 				aresta.decrementaPoltronasLivres();
-				
+				Vertice v = grafo.getVertice(origem);
+				Trajeto t = new Trajeto(v,aresta);
+				atualizaCliente(cliente,t);
 				return true;
 			}
+		}else{
+			//envia para o servidor que possui a trajetoria
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Metodo que atualiza os clientes e suas compras
+	 * @param nome
+	 * @param t
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public void atualizaCliente(String nome, Trajeto t) throws FileNotFoundException, IOException, ClassNotFoundException{
+		ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream("/sistemaDecolagem/" + seuNomeServer +"/clientes/" + nome + ".dat")));//recupera a conta
+		Cliente cliente = (Cliente) objectIn.readObject();
+		objectIn.close();
+		cliente.addTrajeto(t);
+		escreveCliente(cliente);
+	}
 
 	public String getSeuServer() {
 		return seuNomeServer;
