@@ -39,7 +39,7 @@ public class ControllerDadosServer {
 	private int portServer1 = 1099;
 	private String ipServer1 = "10.0.0.113";
 	private int portServer2 = 1100;
-	private String ipServer2 = "10.0.0.113";
+	private String ipServer2 = "10.0.0.13";
 	private int portServer3 = 1101;
 	private String ipServer3 = "10.0.0.113";
 
