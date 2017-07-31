@@ -24,6 +24,7 @@ import br.uefs.ecomp.SistemaDecolagem.exceptions.CadastroJaExistenteException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OrigemDestinoIguaisException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.SemVagasException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.VerticeNaoEncontradoException;
 import br.uefs.ecomp.SistemaDecolagem.model.*;
@@ -84,7 +85,7 @@ public class ControllerDadosServer {
 		}
 		String caminho = "clientes";
 		criaCaminho(caminho);//cria o caminho
-		File arquivos = new File("/sistemaDecolagem/clientes/");
+		File arquivos = new File("/sistemaDecolagem/" + seuNomeServer + "/clientes/");
 		File todosarquivos[] = arquivos.listFiles();//verifica todos os arquivos que ja estão na pasta
 		int cont = 0;
 		for (int i = todosarquivos.length; cont < i; cont++) {//procura na pasta por algum cliente ja cadastrado para não conflitar
@@ -109,7 +110,7 @@ public class ControllerDadosServer {
 	private void escreveCliente(Cliente cliente) throws IOException {
 		String caminho = "clientes";
 		criaCaminho(caminho);//cria o caminho caso ele não exista
-		ObjectOutputStream objectOutC = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("/sistemaDecolagem/clientes/" + cliente.getNome() + ".dat")));	//grava o objeto no caminho informado		
+		ObjectOutputStream objectOutC = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("/sistemaDecolagem/clientes/" + seuNomeServer + "/" + cliente.getNome() + ".dat")));	//grava o objeto no caminho informado		
 		objectOutC.writeObject(cliente);//escreve o arquivo
 		objectOutC.flush();
 		objectOutC.close();
@@ -119,7 +120,7 @@ public class ControllerDadosServer {
 	 * Metedo que cria as pastas de acesso caso não ja existam
 	 */
 	private void criaCaminho(String caminho) {
-		File caminhoCliente = new File("\\sistemaDecolagem\\" + caminho); // verifica se a pasta existe
+		File caminhoCliente = new File("\\sistemaDecolagem\\" + seuNomeServer + "\\" + caminho); // verifica se a pasta existe
 		if (!caminhoCliente.exists()) {
 			caminhoCliente.mkdirs(); //caso não exista cria a pasta
 		}
@@ -142,7 +143,7 @@ public class ControllerDadosServer {
 		if (nome == null || nome.equals("") || senha == null || senha.equals("")) {
 			throw new CampoVazioException();//lança exceção caso uma dos campos estejam vazios
 		}
-		ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream("/sistemaDecolagem/clientes/" + nome + ".dat")));//recupera a conta
+		ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream("/sistemaDecolagem/" + seuNomeServer +"/clientes/" + nome + ".dat")));//recupera a conta
 		Cliente cliente = (Cliente) objectIn.readObject();
 		objectIn.close();
 
@@ -395,6 +396,15 @@ public class ControllerDadosServer {
 		return todos;
 	}
 	
+	/**
+	 * Metodo que retorna o trajeto entre dois pontos
+	 * @param origem
+	 * @param destino
+	 * @return
+	 * @throws CloneNotSupportedException
+	 * @throws OrigemDestinoIguaisException
+	 * @throws VerticeNaoEncontradoException
+	 */
 	public String getTrajeto(String origem, String destino) throws CloneNotSupportedException, OrigemDestinoIguaisException, VerticeNaoEncontradoException{
 		Caminho caminho = new Caminho(origem,destino);
 		String s = caminho.criaCaminho();
@@ -433,10 +443,24 @@ public class ControllerDadosServer {
 		return corrigida;
 	}
 	
-	public void testeCaminho() throws CloneNotSupportedException, OrigemDestinoIguaisException, VerticeNaoEncontradoException{
-		Caminho caminho = new Caminho("A","E");
-		caminho.criaCaminho();
+	public boolean compraCaminho(String cliente, String origem,String destino, String servidor) throws CampoVazioException, SemVagasException, OperacaoInvalidaException{
+		if(origem == null || origem.equals("") || destino == null || destino.equals("") || servidor == null || servidor.equals("") || cliente == null || cliente.equals("")){
+			throw new CampoVazioException();
+		}
+		
+		if(servidor.equals(seuNomeServer)){
+			Aresta aresta = grafo.getAresta(origem, destino);
+			if(aresta.getPoltronasLivres()<1){
+				throw new SemVagasException();
+			}else{
+				aresta.decrementaPoltronasLivres();
+				
+				return true;
+			}
+		}
+		return false;
 	}
+	
 
 	public String getSeuServer() {
 		return seuNomeServer;

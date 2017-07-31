@@ -63,6 +63,32 @@ public class Grafo implements IGrafo, Serializable,Cloneable  {
 		return (Grafo) super.clone();
 	}
 	
+	/**
+	 * Metodo que retorna a aresta solicitada pela origem e destino
+	 * @param o
+	 * @param d
+	 * @return
+	 */
+	public Aresta getAresta(String o, String d){
+		Iterator<Vertice> iteraV = vertices.iterator();
+		Iterator<Aresta> iteraA;
+		Vertice auxV;
+		Aresta auxA;
+		while(iteraV.hasNext()){
+			auxV = iteraV.next();
+			if(auxV.getNome().equals(o)){
+				iteraA = auxV.getArestas().iterator();
+				while(iteraA.hasNext()){
+					auxA = iteraA.next();
+					if(auxA.getDestino().getNome().equals(d)){
+						return auxA;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
 	public Grafo clonado() throws CloneNotSupportedException{
 		Grafo g = new Grafo();
 		Iterator<Vertice> iteraG1 = vertices.iterator();
