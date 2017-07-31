@@ -29,7 +29,7 @@ public class ControllerCliente {
 	private ControllerCliente(){
 		nomeLogin = "";
 		senhaLogin = "";
-		ip = "192.168.15.4";
+		ip = "10.0.0.113";
 		porta = 1099;
 	}
 
