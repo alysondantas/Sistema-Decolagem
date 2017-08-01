@@ -493,7 +493,7 @@ public class ControllerDadosServer {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Metodo que recebe a solicitação de compra de outro servidor
 	 * @param origem
@@ -513,7 +513,7 @@ public class ControllerDadosServer {
 			return t;
 		}
 	}
-	
+
 	/**
 	 * Metodo que raliza a compra de um trecho
 	 * @param cliente
@@ -554,7 +554,7 @@ public class ControllerDadosServer {
 		cliente.addTrajeto(t);
 		escreveCliente(cliente);
 	}
-	
+
 	/**
 	 * Metodo que atualiza os clientes e suas compras
 	 * @param nome
@@ -570,7 +570,7 @@ public class ControllerDadosServer {
 		cliente.addTrajetoReserva(t);
 		escreveCliente(cliente);
 	}
-	
+
 	/**
 	 * Metodo que coloca um cliente em reserva
 	 * @param origem
@@ -588,15 +588,15 @@ public class ControllerDadosServer {
 			Vertice v = grafo.getVertice(origem);
 			Trajeto t = new Trajeto(v,aresta);
 			atualizaClienteReserva(cliente,t);
-			
+
 			return aresta.addReserva(cli);
 		}else{
-			
+
 			return false;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Metodo que recebe as reservas de trechos
 	 * @param origem
@@ -639,7 +639,7 @@ public class ControllerDadosServer {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Metodo que recebe reserva de outro servidor
 	 * @param cliente
@@ -658,10 +658,9 @@ public class ControllerDadosServer {
 				return t;
 			}
 		}
-
 		return null;
 	}
-	
+
 	/**
 	 * Metodo que recebe solicitação de cancelar reserva
 	 * @param cliente
@@ -679,7 +678,7 @@ public class ControllerDadosServer {
 			throw new CampoVazioException();
 		}
 		if(servidor.equals(seuNomeServer)){
-			boolean t = saiReserva(origem, destino, cliente,seuNomeServer);
+			boolean t = removeReserva(origem, destino, cliente,seuNomeServer);
 			if(t){
 				atualizaClienteRemoveReserva(cliente,origem,destino);
 				return true;
@@ -687,7 +686,7 @@ public class ControllerDadosServer {
 				return false;
 			}
 		}else if(servidor.equals(nomeServidor2)){
-			boolean b = conexaoRMI2.recebeSaiReserva(origem, destino, cliente, seuNomeServer);
+			boolean b = conexaoRMI2.recebeCancelaReserva(origem, destino, cliente, seuNomeServer);
 			if(b){
 				atualizaClienteRemoveReserva(cliente, origem, destino);
 				return true;
@@ -695,11 +694,17 @@ public class ControllerDadosServer {
 				return false;
 			}
 		}else if(servidor.equals(nomeServidor1)){
-			
+			boolean b = conexaoRMI1.recebeCancelaReserva(origem, destino, cliente, seuNomeServer);
+			if(b){
+				atualizaClienteRemoveReserva(cliente, origem, destino);
+				return true;
+			}else{
+				return false;
+			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Metodo que atualiza os clientes e suas compras
 	 * @param nome
@@ -724,7 +729,7 @@ public class ControllerDadosServer {
 		cliente.getTrajetosReservados().remove(aux);
 		escreveCliente(cliente);
 	}
-	
+
 	/**
 	 * Metodo que remove reserva
 	 * @param origem
@@ -733,11 +738,103 @@ public class ControllerDadosServer {
 	 * @param server
 	 * @return
 	 */
-	public boolean saiReserva(String origem, String destino, String cliente,String server){
+	public boolean removeReserva(String origem, String destino, String cliente,String server){
 		Aresta aresta = grafo.getAresta(origem, destino);
 		return aresta.removeReserva(cliente,server);
 	}
-	
+
+	/**
+	 * Metodo que recebe solicitação de finalizar uma viagem
+	 * @param viagem
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws OperacaoInvalidaException
+	 * @throws IOException
+	 */
+	public boolean finalizaViagem(String viagem) throws FileNotFoundException, ClassNotFoundException, OperacaoInvalidaException, IOException{
+		String informacoes[] = viagem.split(Pattern.quote("$"));
+		int i;
+		for(i = 0 ; i < informacoes.length ; i++){
+			String aux[] = informacoes[i].split(Pattern.quote("!"));
+			if(aux[2].equals(seuNomeServer)){
+				recebeFinalizaViagem(aux[0], aux[1]);
+			}else if(aux[2].equals(nomeServidor1)){
+				conexaoRMI1.finalizaViagem(aux[0], aux[1]);
+			}else if(aux[2].equals(nomeServidor2)){
+				conexaoRMI2.finalizaViagem(aux[0], aux[1]);
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Metodo que finaliza uma viagem e incrementa as poltronas livres
+	 * @param origem
+	 * @param destino
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws OperacaoInvalidaException
+	 * @throws IOException
+	 */
+	public boolean recebeFinalizaViagem(String origem,String destino) throws FileNotFoundException, ClassNotFoundException, OperacaoInvalidaException, IOException{
+		Aresta a = grafo.getAresta(origem, destino);
+		if(a != null){
+			return a.incrementaPoltronasLivres();
+		}else return false;
+	}
+
+	/**
+	 * Metodo que valida quando um cliente saiu da espera por uma vaga
+	 * @param cliente
+	 * @param aresta
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public boolean saiuReserva(ClienteServer cliente, Aresta aresta) throws FileNotFoundException, ClassNotFoundException, IOException{
+		if(cliente.getServer().equals(seuNomeServer)){
+			return atualizaClienteSaiuReserva(cliente.getNome(),aresta);
+		}else if(cliente.getServer().equals(nomeServidor1)){
+			return conexaoRMI1.recebeSaiuReserva(cliente.getNome(), aresta);
+		}else if(cliente.getServer().equals(nomeServidor2)){
+			return conexaoRMI2.recebeSaiuReserva(cliente.getNome(), aresta);
+		}
+		return false;
+	}
+
+	/**
+	 * Metodo que atualiza a saida de um cliente da espera
+	 * @param nome
+	 * @param a
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public boolean atualizaClienteSaiuReserva(String nome, Aresta a) throws FileNotFoundException, IOException, ClassNotFoundException{
+		ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream("/sistemaDecolagem/" + seuNomeServer +"/clientes/" + nome + ".dat")));//recupera a conta
+		Cliente cliente = (Cliente) objectIn.readObject();
+		objectIn.close();
+		Iterator<Trajeto> itera = cliente.getTrajetosReservados().iterator();
+		Trajeto aux = null;
+		while(itera.hasNext()){
+			aux = itera.next();
+			if(aux.getDestino().getDestino().getNome().equals(a.getDestino().getNome()) && aux.getDestino().getNomeServer().equals(a.getNomeServer())){
+				break;
+			}
+		}
+		if(aux != null){
+			boolean b = cliente.removeTrajetoReserva(aux);
+			cliente.addTrajetoReserva(aux);
+			escreveCliente(cliente);
+			return b;
+		}
+		return false;
+	}
 
 	public String getSeuServer() {
 		return seuNomeServer;
@@ -802,7 +899,4 @@ public class ControllerDadosServer {
 	public Grafo getGrafoServer(){
 		return grafoServers;
 	}
-
-
-
 }

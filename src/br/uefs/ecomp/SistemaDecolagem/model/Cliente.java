@@ -53,6 +53,10 @@ public class Cliente implements Serializable {
 	public List<Trajeto> getTrajetosReservados() {
 		return trajetosReservados;
 	}
+	
+	public boolean removeTrajetoReserva(Trajeto t){
+		return trajetosReservados.remove(t);
+	}
 
 	public void setTrajetosReservados(List<Trajeto> trajetosReservados) {
 		this.trajetosReservados = trajetosReservados;

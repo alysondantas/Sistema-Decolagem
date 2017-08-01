@@ -1,9 +1,12 @@
 package br.uefs.ecomp.SistemaDecolagem.model;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerDadosServer;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SemVagasException;
 import br.uefs.ecomp.SistemaDecolagem.util.ConexaoRMI;
@@ -38,9 +41,21 @@ public class ConexaoRMIImpl extends UnicastRemoteObject implements ConexaoRMI {
 	}
 
 	@Override
-	public boolean recebeSaiReserva(String origem, String destino, String cliente, String servidor) throws RemoteException {
+	public boolean recebeCancelaReserva(String origem, String destino, String cliente, String servidor) throws FileNotFoundException, ClassNotFoundException, CampoVazioException, IOException {
 		// TODO Auto-generated method stub
-		return controller.saiReserva(origem, destino, cliente, servidor);
+		return controller.cancelaReserva(origem, destino, cliente, servidor);
+	}
+
+	@Override
+	public boolean recebeSaiuReserva(String nome, Aresta a) throws FileNotFoundException, ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		return controller.atualizaClienteSaiuReserva(nome, a);
+	}
+
+	@Override
+	public boolean finalizaViagem(String origem, String destino) throws FileNotFoundException, ClassNotFoundException, OperacaoInvalidaException, IOException {
+		// TODO Auto-generated method stub
+		return controller.recebeFinalizaViagem(origem, destino);
 	}
 
 }

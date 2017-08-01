@@ -1,10 +1,13 @@
 package br.uefs.ecomp.SistemaDecolagem.model;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import br.uefs.ecomp.SistemaDecolagem.controller.ControllerDadosServer;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 
 public class Aresta implements Serializable,Cloneable {
@@ -71,9 +74,16 @@ public class Aresta implements Serializable,Cloneable {
 		return poltronasLivres;
 	}
 
-	public void incrementaPoltronasLivres() throws OperacaoInvalidaException {
+	public synchronized boolean incrementaPoltronasLivres() throws OperacaoInvalidaException, FileNotFoundException, ClassNotFoundException, IOException {
 		if(poltronasLivres < qtdPoltronas){
-			this.poltronasLivres++;
+			if(reservas.size() < 1){
+				this.poltronasLivres++;
+				return true;
+			}else{
+				ClienteServer cliente = reservas.remove(0);
+				ControllerDadosServer control = ControllerDadosServer.getInstance();
+				return control.saiuReserva(cliente, this);
+			}
 		}else{
 			throw new OperacaoInvalidaException();
 		}
