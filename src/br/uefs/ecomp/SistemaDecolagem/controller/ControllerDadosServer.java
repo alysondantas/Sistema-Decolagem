@@ -41,6 +41,14 @@ public class ControllerDadosServer {
 	private String ipServer2 = "10.0.0.13";
 	private int portServer3 = 1101;
 	private String ipServer3 = "10.0.0.113";
+	private ConexaoRMI conexaoRMI2;
+	private ConexaoRMI conexaoRMI1;
+	private String nomeServidor1 = "servidor1";
+	private String nomeServidor2 = "servidor2";
+	private String lipServer1 = ipServer1;
+	private String lipServer2 = ipServer2;
+	private int lportServer2 = portServer2 + 1000;
+	private int lportServer1 = portServer1 + 1000;
 
 
 	/**
@@ -213,12 +221,12 @@ public class ControllerDadosServer {
 	 * @throws VerticeNaoEncontradoException 
 	 */
 	public void syncGrafos() throws MalformedURLException, RemoteException, NotBoundException, VerticeNaoEncontradoException{
-		String nomeServidor1 = "servidor1";
+		/*String nomeServidor1 = "servidor1";
 		String nomeServidor2 = "servidor2";
 		String lipServer1 = ipServer1;
 		String lipServer2 = ipServer2;
 		int lportServer2 = portServer2 + 1000;
-		int lportServer1 = portServer1 + 1000;
+		int lportServer1 = portServer1 + 1000;*/
 		if(seuNomeServer.equals("servidor1")){
 			nomeServidor1 = "servidor2";
 			nomeServidor2 = "servidor3";
@@ -242,9 +250,9 @@ public class ControllerDadosServer {
 			lipServer2 = ipServer2;
 		}
 
-		ConexaoRMI conexaoRMI1 = (ConexaoRMI) Naming.lookup( "rmi://"+lipServer1+":"+lportServer1+"/" + nomeServidor1);
+		conexaoRMI1 = (ConexaoRMI) Naming.lookup( "rmi://"+lipServer1+":"+lportServer1+"/" + nomeServidor1);
 		Grafo grafo1 = conexaoRMI1.getGrafo();
-		ConexaoRMI conexaoRMI2 = (ConexaoRMI) Naming.lookup( "rmi://"+lipServer2+":"+lportServer2+"/" + nomeServidor2);
+		conexaoRMI2 = (ConexaoRMI) Naming.lookup( "rmi://"+lipServer2+":"+lportServer2+"/" + nomeServidor2);
 		Grafo grafo2 = conexaoRMI2.getGrafo();
 
 		grafoServers = new Grafo();
@@ -442,27 +450,93 @@ public class ControllerDadosServer {
 		return corrigida;
 	}
 
+	/**
+	 * Metodo que direciona a compra de um trecho
+	 * @param cliente
+	 * @param origem
+	 * @param destino
+	 * @param servidor
+	 * @return
+	 * @throws CampoVazioException
+	 * @throws SemVagasException
+	 * @throws OperacaoInvalidaException
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public boolean compraCaminho(String cliente, String origem,String destino, String servidor) throws CampoVazioException, SemVagasException, OperacaoInvalidaException, FileNotFoundException, ClassNotFoundException, IOException{
 		if(origem == null || origem.equals("") || destino == null || destino.equals("") || servidor == null || servidor.equals("") || cliente == null || cliente.equals("")){
 			throw new CampoVazioException();
 		}
 
 		if(servidor.equals(seuNomeServer)){
-			Aresta aresta = grafo.getAresta(origem, destino);
-			if(aresta.getPoltronasLivres()<1){
-				//add na fila de espera
-				throw new SemVagasException();
-			}else{
-				aresta.decrementaPoltronasLivres();
-				Vertice v = grafo.getVertice(origem);
-				Trajeto t = new Trajeto(v,aresta);
-				atualizaCliente(cliente,t);
+			return realizaCompra(cliente,origem,destino);
+		}else if(servidor.equals(nomeServidor1)){
+			//conexaoRMI1
+			Trajeto comprado = conexaoRMI1.comprarTrecho(origem, destino);
+			if(comprado != null){
+				atualizaCliente(cliente,comprado);
 				return true;
+			}else{
+				return false;
 			}
-		}else{
 			//envia para o servidor que possui a trajetoria
+		}else if(servidor.equals(nomeServidor2)){
+			//conexaoRMI2
+			Trajeto comprado = conexaoRMI2.comprarTrecho(origem, destino);
+			if(comprado != null){
+				atualizaCliente(cliente,comprado);
+				return true;
+			}else{
+				return false;
+			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Metodo que recebe a solicitação de compra de outro servidor
+	 * @param origem
+	 * @param destino
+	 * @return
+	 * @throws SemVagasException
+	 * @throws OperacaoInvalidaException
+	 */
+	public Trajeto recebeCompraDeOutro(String origem,String destino) throws SemVagasException, OperacaoInvalidaException{
+		Aresta aresta = grafo.getAresta(origem, destino);
+		if(aresta.getPoltronasLivres()<1){
+			throw new SemVagasException();
+		}else{
+			aresta.decrementaPoltronasLivres();
+			Vertice v = grafo.getVertice(origem);
+			Trajeto t = new Trajeto(v,aresta);
+			return t;
+		}
+	}
+	
+	/**
+	 * Metodo que raliza a compra de um trecho
+	 * @param cliente
+	 * @param origem
+	 * @param destino
+	 * @return
+	 * @throws SemVagasException
+	 * @throws OperacaoInvalidaException
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public boolean realizaCompra(String cliente, String origem, String destino) throws SemVagasException, OperacaoInvalidaException, FileNotFoundException, ClassNotFoundException, IOException{
+		Aresta aresta = grafo.getAresta(origem, destino);
+		if(aresta.getPoltronasLivres()<1){
+			throw new SemVagasException();
+		}else{
+			aresta.decrementaPoltronasLivres();
+			Vertice v = grafo.getVertice(origem);
+			Trajeto t = new Trajeto(v,aresta);
+			atualizaCliente(cliente,t);
+			return true;
+		}
 	}
 
 	/**
@@ -480,6 +554,190 @@ public class ControllerDadosServer {
 		cliente.addTrajeto(t);
 		escreveCliente(cliente);
 	}
+	
+	/**
+	 * Metodo que atualiza os clientes e suas compras
+	 * @param nome
+	 * @param t
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public void atualizaClienteReserva(String nome, Trajeto t) throws FileNotFoundException, IOException, ClassNotFoundException{
+		ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream("/sistemaDecolagem/" + seuNomeServer +"/clientes/" + nome + ".dat")));//recupera a conta
+		Cliente cliente = (Cliente) objectIn.readObject();
+		objectIn.close();
+		cliente.addTrajetoReserva(t);
+		escreveCliente(cliente);
+	}
+	
+	/**
+	 * Metodo que coloca um cliente em reserva
+	 * @param origem
+	 * @param destino
+	 * @param cliente
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public boolean entrarReserva(String origem, String destino,String cliente) throws FileNotFoundException, ClassNotFoundException, IOException{
+		Aresta aresta = grafo.getAresta(origem, destino);
+		if(aresta.getPoltronasLivres()<1){
+			ClienteServer cli = new ClienteServer(cliente, seuNomeServer);
+			Vertice v = grafo.getVertice(origem);
+			Trajeto t = new Trajeto(v,aresta);
+			atualizaClienteReserva(cliente,t);
+			
+			return aresta.addReserva(cli);
+		}else{
+			
+			return false;
+		}
+		
+	}
+	
+	/**
+	 * Metodo que recebe as reservas de trechos
+	 * @param origem
+	 * @param destino
+	 * @param cliente
+	 * @param servidor
+	 * @return
+	 * @throws CampoVazioException
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public boolean reservarTrecho(String origem, String destino, String cliente, String servidor) throws CampoVazioException, FileNotFoundException, ClassNotFoundException, IOException{
+		if(origem == null || origem.equals("") || destino == null || destino.equals("") || servidor == null || servidor.equals("") || cliente == null || cliente.equals("")){
+			throw new CampoVazioException();
+		}
+
+		if(servidor.equals(seuNomeServer)){
+			return entrarReserva(origem, destino, cliente);
+		}else if(servidor.equals(nomeServidor1)){
+			//conexaoRMI1
+			Trajeto comprado = conexaoRMI1.reservaTrecho(origem, destino, cliente, seuNomeServer);
+			if(comprado != null){
+				atualizaClienteReserva(cliente,comprado);
+				return true;
+			}else{
+				return false;
+			}
+			//envia para o servidor que possui a trajetoria
+		}else if(servidor.equals(nomeServidor2)){
+			//conexaoRMI1
+			Trajeto comprado = conexaoRMI2.reservaTrecho(origem, destino, cliente, seuNomeServer);
+			if(comprado != null){
+				atualizaClienteReserva(cliente,comprado);
+				return true;
+			}else{
+				return false;
+			}
+			//envia para o servidor que possui a trajetoria
+		}
+		return false;
+	}
+	
+	/**
+	 * Metodo que recebe reserva de outro servidor
+	 * @param cliente
+	 * @param origem
+	 * @param destino
+	 * @param server
+	 * @return
+	 */
+	public Trajeto recebeReserva(String cliente, String origem, String destino, String server){
+		Aresta aresta = grafo.getAresta(origem, destino);
+		if(aresta.getPoltronasLivres()<1){
+			ClienteServer cli = new ClienteServer(cliente, server);
+			Vertice v = grafo.getVertice(origem);
+			Trajeto t = new Trajeto(v,aresta);
+			if(aresta.addReserva(cli)){
+				return t;
+			}
+		}
+
+		return null;
+	}
+	
+	/**
+	 * Metodo que recebe solicitação de cancelar reserva
+	 * @param cliente
+	 * @param origem
+	 * @param destino
+	 * @param servidor
+	 * @return
+	 * @throws CampoVazioException
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public boolean cancelaReserva(String cliente, String origem, String destino, String servidor) throws CampoVazioException, FileNotFoundException, ClassNotFoundException, IOException{
+		if(origem == null || origem.equals("") || destino == null || destino.equals("") || servidor == null || servidor.equals("") || cliente == null || cliente.equals("")){
+			throw new CampoVazioException();
+		}
+		if(servidor.equals(seuNomeServer)){
+			boolean t = saiReserva(origem, destino, cliente,seuNomeServer);
+			if(t){
+				atualizaClienteRemoveReserva(cliente,origem,destino);
+				return true;
+			}else{
+				return false;
+			}
+		}else if(servidor.equals(nomeServidor2)){
+			boolean b = conexaoRMI2.recebeSaiReserva(origem, destino, cliente, seuNomeServer);
+			if(b){
+				atualizaClienteRemoveReserva(cliente, origem, destino);
+				return true;
+			}else{
+				return false;
+			}
+		}else if(servidor.equals(nomeServidor1)){
+			
+		}
+		return false;
+	}
+	
+	/**
+	 * Metodo que atualiza os clientes e suas compras
+	 * @param nome
+	 * @param t
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public void atualizaClienteRemoveReserva(String nome, String origem, String destino) throws FileNotFoundException, IOException, ClassNotFoundException{
+		ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream("/sistemaDecolagem/" + seuNomeServer +"/clientes/" + nome + ".dat")));//recupera a conta
+		Cliente cliente = (Cliente) objectIn.readObject();
+		objectIn.close();
+		Iterator<Trajeto> itera = cliente.getTrajetosReservados().iterator();
+		Trajeto aux = null;
+		Aresta aresta = grafo.getAresta(origem, destino);
+		while(itera.hasNext()){
+			aux = itera.next();
+			if(aux.getDestino().equals(aresta)){
+				break;
+			}
+		}
+		cliente.getTrajetosReservados().remove(aux);
+		escreveCliente(cliente);
+	}
+	
+	/**
+	 * Metodo que remove reserva
+	 * @param origem
+	 * @param destino
+	 * @param cliente
+	 * @param server
+	 * @return
+	 */
+	public boolean saiReserva(String origem, String destino, String cliente,String server){
+		Aresta aresta = grafo.getAresta(origem, destino);
+		return aresta.removeReserva(cliente,server);
+	}
+	
 
 	public String getSeuServer() {
 		return seuNomeServer;

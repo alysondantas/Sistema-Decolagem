@@ -1,6 +1,9 @@
 package br.uefs.ecomp.SistemaDecolagem.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 
@@ -11,13 +14,37 @@ public class Aresta implements Serializable,Cloneable {
 	private int poltronasLivres;
 	private boolean passou;
 	private String nomeServer;
+	private List<ClienteServer> reservas;
 	
 	public Aresta(Vertice destino, int qtdPoltronas, String nomeServer){
 		this.setDestino(destino);
 		this.qtdPoltronas = qtdPoltronas;
 		poltronasLivres = qtdPoltronas;
 		setPassou(false);
+		reservas = new ArrayList<>();
 		this.nomeServer = nomeServer;
+	}
+	
+	public boolean addReserva(ClienteServer cliente){
+		if(poltronasLivres>0){
+			return false;
+		}else{
+			reservas.add(cliente);
+			return true;
+		}
+	}
+	
+	public boolean removeReserva(String cliente, String server){
+		Iterator<ClienteServer> itera = reservas.iterator();
+		ClienteServer aux = null;
+		while(itera.hasNext()){
+			aux = itera.next();
+			if(aux.getNome().equals(cliente) && aux.getServer().equals(server)){
+				break;
+			}
+		}
+		
+		return reservas.remove(aux);
 	}
 
 	public Vertice getDestino() {

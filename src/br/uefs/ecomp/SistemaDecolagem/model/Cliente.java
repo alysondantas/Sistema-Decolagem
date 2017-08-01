@@ -9,10 +9,12 @@ public class Cliente implements Serializable {
 	private String nome;
     private String senha;
     private List<Trajeto> trajetos;
+    private List<Trajeto> trajetosReservados;
     
     public Cliente(String nome, String senha){
     	this.setNome(nome);
     	this.setSenha(senha);
+    	trajetosReservados = new ArrayList<Trajeto>();
     	setTrajetos(new ArrayList<Trajeto>());
     }
 
@@ -42,5 +44,17 @@ public class Cliente implements Serializable {
 	
 	public void addTrajeto(Trajeto t){
 		trajetos.add(t);
+	}
+	
+	public void addTrajetoReserva(Trajeto t){
+		trajetosReservados.add(t);
+	}
+
+	public List<Trajeto> getTrajetosReservados() {
+		return trajetosReservados;
+	}
+
+	public void setTrajetosReservados(List<Trajeto> trajetosReservados) {
+		this.trajetosReservados = trajetosReservados;
 	}
 }
