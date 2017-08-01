@@ -15,6 +15,7 @@ import javax.swing.JTextArea;
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerDadosServer;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CadastroJaExistenteException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.OrigemDestinoIguaisException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
 
 
@@ -82,7 +83,10 @@ public class ThreadRecebeCliente extends Thread {
                     }
                     saida.flush();
                     break;
-                case 2: 
+                case 2: // pega as origens e destinos possiveis.
+                	
+                		s = "Retornando os vertices";
+                		saida.writeObject(controller.solicitaTodosVertices());//retorna todos os vertices
                     
                     break;
                 case 3: 

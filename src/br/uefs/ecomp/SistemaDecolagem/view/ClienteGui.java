@@ -2,11 +2,18 @@ package br.uefs.ecomp.SistemaDecolagem.view;
 
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import br.uefs.ecomp.SistemaDecolagem.controller.ControllerGui;
+
 import javax.swing.JTabbedPane;
+import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -15,6 +22,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JList;
 
 public class ClienteGui extends JFrame {
+	private ControllerGui controller = ControllerGui.getInstance();
+	
 
 	private JPanel contentPanePrincipal;
 
@@ -69,7 +78,9 @@ public class ClienteGui extends JFrame {
 		
 		JButton btnBuscar = new JButton("buscar");
 		
-		JList listOrigem = new JList();
+		DefaultListModel modelOrigem = new DefaultListModel();
+		JList listOrigem = new JList(modelOrigem);
+		
 		
 		JLabel lblSelecioneAOrigem = new JLabel("Selecione a origem");
 		
@@ -82,32 +93,57 @@ public class ClienteGui extends JFrame {
 		JList listTrechos = new JList();
 		
 		JButton btnComprar = new JButton("Comprar");
+		
+		JButton btnAtualizarRotas = new JButton("Atualizar");
+		
+		btnAtualizarRotas.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				try {
+					for(int i = 0; i<controller.carregarOrigemDestino().length; i++ ){
+					modelOrigem.addElement(controller.carregarOrigemDestino());
+					}
+				} catch (ClassNotFoundException | IOException e) {
+					
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		JLabel lblAtualizarRotas = new JLabel("Atualizar Rotas");
 		GroupLayout gl_panelComprarPassagem = new GroupLayout(panelComprarPassagem);
 		gl_panelComprarPassagem.setHorizontalGroup(
 			gl_panelComprarPassagem.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panelComprarPassagem.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panelComprarPassagem.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnBuscar, Alignment.LEADING)
+					.addGroup(gl_panelComprarPassagem.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelComprarPassagem.createSequentialGroup()
 							.addGroup(gl_panelComprarPassagem.createParallelGroup(Alignment.LEADING)
-								.addComponent(listDestino, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-								.addComponent(lblSelecioneAOrigem)
-								.addComponent(lblSelecioneODestino)
 								.addGroup(gl_panelComprarPassagem.createSequentialGroup()
-									.addComponent(listOrigem, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
+									.addGroup(gl_panelComprarPassagem.createParallelGroup(Alignment.LEADING)
+										.addComponent(listDestino, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+										.addComponent(lblSelecioneAOrigem)
+										.addComponent(lblSelecioneODestino)
+										.addGroup(gl_panelComprarPassagem.createSequentialGroup()
+											.addComponent(listOrigem, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED))
+										.addComponent(btnBuscar, Alignment.TRAILING))
+									.addGap(325))
+								.addGroup(gl_panelComprarPassagem.createSequentialGroup()
+									.addComponent(btnAtualizarRotas)
 									.addPreferredGap(ComponentPlacement.RELATED)))
-							.addGroup(gl_panelComprarPassagem.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panelComprarPassagem.createParallelGroup(Alignment.TRAILING)
 								.addGroup(gl_panelComprarPassagem.createSequentialGroup()
-									.addGap(398)
 									.addComponent(lblSelecioneOsTrechos)
 									.addGap(271))
-								.addGroup(Alignment.TRAILING, gl_panelComprarPassagem.createSequentialGroup()
-									.addGap(325)
+								.addGroup(gl_panelComprarPassagem.createSequentialGroup()
 									.addGroup(gl_panelComprarPassagem.createParallelGroup(Alignment.TRAILING)
 										.addComponent(btnComprar)
 										.addComponent(listTrechos, GroupLayout.PREFERRED_SIZE, 403, GroupLayout.PREFERRED_SIZE))
-									.addGap(39)))))
+									.addGap(39))))
+						.addComponent(lblAtualizarRotas))
 					.addContainerGap())
 		);
 		gl_panelComprarPassagem.setVerticalGroup(
@@ -127,8 +163,12 @@ public class ClienteGui extends JFrame {
 					.addComponent(listDestino, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(btnBuscar)
-					.addGap(55)
-					.addComponent(btnComprar)
+					.addGap(30)
+					.addComponent(lblAtualizarRotas)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_panelComprarPassagem.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnComprar)
+						.addComponent(btnAtualizarRotas))
 					.addGap(53))
 		);
 		panelComprarPassagem.setLayout(gl_panelComprarPassagem);
