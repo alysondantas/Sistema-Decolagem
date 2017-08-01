@@ -109,7 +109,7 @@ public class ControllerDadosServer {
 	private void escreveCliente(Cliente cliente) throws IOException {
 		String caminho = "clientes";
 		criaCaminho(caminho);//cria o caminho caso ele não exista
-		ObjectOutputStream objectOutC = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("/sistemaDecolagem/clientes/" + seuNomeServer + "/" + cliente.getNome() + ".dat")));	//grava o objeto no caminho informado		
+		ObjectOutputStream objectOutC = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("/sistemaDecolagem/" + seuNomeServer + "/clientes/"+ cliente.getNome() + ".dat")));	//grava o objeto no caminho informado		
 		objectOutC.writeObject(cliente);//escreve o arquivo
 		objectOutC.flush();
 		objectOutC.close();
