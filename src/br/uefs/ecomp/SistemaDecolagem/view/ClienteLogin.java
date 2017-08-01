@@ -170,7 +170,7 @@ public class ClienteLogin {
 		panel_1.add(lblServidorIp);
 		
 		textField = new JTextField();
-		textField.setText("10.0.0.113");
+		textField.setText("10.0.0.107");
 		textField.setBounds(10, 34, 104, 20);
 		panel_1.add(textField);
 		textField.setColumns(10);
