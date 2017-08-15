@@ -36,11 +36,11 @@ public class ControllerDadosServer {
 	private Grafo grafoServers;
 	private String seuNomeServer;
 	private int portServer1 = 1099;
-	private String ipServer1 = "10.0.0.113";
+	private String ipServer1 = "192.168.15.5";
 	private int portServer2 = 1100;
-	private String ipServer2 = "10.0.0.13";
+	private String ipServer2 = "192.168.15.5";
 	private int portServer3 = 1101;
-	private String ipServer3 = "10.0.0.113";
+	private String ipServer3 = "192.168.15.5";
 	private ConexaoRMI conexaoRMI2;
 	private ConexaoRMI conexaoRMI1;
 	private String nomeServidor1 = "servidor1";

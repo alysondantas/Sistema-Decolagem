@@ -7,6 +7,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerCliente;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
@@ -25,12 +27,12 @@ import java.awt.event.ActionEvent;
 public class ClienteLogin {
 	
 	private JFrame frame;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField textFieldip1;
+	private JTextField textFieldip2;
+	private JTextField textFieldip3;
+	private JTextField textFieldporta1;
+	private JTextField textFieldporta2;
+	private JTextField textFieldporta3;
 	private JTextField textFieldUser;
 	private JPasswordField passwordFieldSenha;
 	private JRadioButton rdbtnServidor;
@@ -81,12 +83,12 @@ public class ClienteLogin {
 			}
 		}
 		frame = new JFrame();
-		frame.setBounds(100, 100, 375, 277);
+		frame.setBounds(100, 100, 403, 302);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(10, 11, 339, 216);
+		tabbedPane.setBounds(10, 11, 367, 241);
 		frame.getContentPane().add(tabbedPane);
 		
 		JPanel panel = new JPanel();
@@ -132,11 +134,24 @@ public class ClienteLogin {
 		
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg1){
+				String servidor = null;
+				if(rdbtnServidor.isSelected()){
+					servidor = "servidor1";
+				}else if(rdbtnServidor2.isSelected()){
+					servidor = "servidor2";
+				}else if(rdbtnServidor3.isSelected()){
+					servidor = "servidor3";
+				}
 				try {
-					if(controller.estaLogado(passwordFieldSenha.getText(),textFieldUser.getText())==true){
-						ClienteGui clienteGui = new ClienteGui();
-						clienteGui.setVisible(true);
-						
+					try {
+						if(controller.estaLogado(passwordFieldSenha.getText(),textFieldUser.getText(),servidor)==true){
+							ClienteGui clienteGui = new ClienteGui();
+							clienteGui.setVisible(true);
+							
+						}
+					} catch (OperacaoInvalidaException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
@@ -169,69 +184,86 @@ public class ClienteLogin {
 		lblServidorIp.setBounds(10, 11, 73, 14);
 		panel_1.add(lblServidorIp);
 		
-		textField = new JTextField();
-		textField.setText("10.0.0.107");
-		textField.setBounds(10, 34, 104, 20);
-		panel_1.add(textField);
-		textField.setColumns(10);
+		textFieldip1 = new JTextField();
+		textFieldip1.setText("10.0.0.107");
+		textFieldip1.setBounds(10, 34, 104, 20);
+		panel_1.add(textFieldip1);
+		textFieldip1.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setText("192.168.15.100");
-		textField_1.setColumns(10);
-		textField_1.setBounds(10, 89, 104, 20);
-		panel_1.add(textField_1);
+		textFieldip2 = new JTextField();
+		textFieldip2.setText("192.168.15.100");
+		textFieldip2.setColumns(10);
+		textFieldip2.setBounds(10, 89, 104, 20);
+		panel_1.add(textFieldip2);
 		
 		JLabel lblServidorIp_1 = new JLabel("Servidor 2 IP:");
 		lblServidorIp_1.setBounds(10, 66, 73, 14);
 		panel_1.add(lblServidorIp_1);
 		
-		textField_2 = new JTextField();
-		textField_2.setText("192.168.15.100");
-		textField_2.setColumns(10);
-		textField_2.setBounds(10, 143, 104, 20);
-		panel_1.add(textField_2);
+		textFieldip3 = new JTextField();
+		textFieldip3.setText("192.168.15.100");
+		textFieldip3.setColumns(10);
+		textFieldip3.setBounds(10, 143, 104, 20);
+		panel_1.add(textFieldip3);
 		
 		JLabel lblServidorIp_2 = new JLabel("Servidor 3 IP:");
 		lblServidorIp_2.setBounds(10, 120, 73, 14);
 		panel_1.add(lblServidorIp_2);
 		
-		textField_3 = new JTextField();
-		textField_3.setText("1099");
-		textField_3.setColumns(10);
-		textField_3.setBounds(178, 34, 42, 20);
-		panel_1.add(textField_3);
+		textFieldporta1 = new JTextField();
+		textFieldporta1.setText("1099");
+		textFieldporta1.setColumns(10);
+		textFieldporta1.setBounds(178, 34, 42, 20);
+		panel_1.add(textFieldporta1);
 		
 		JLabel lblServidorPorta = new JLabel("Servidor 1 PORTA:");
 		lblServidorPorta.setBounds(178, 11, 98, 14);
 		panel_1.add(lblServidorPorta);
 		
-		textField_4 = new JTextField();
-		textField_4.setText("1100");
-		textField_4.setColumns(10);
-		textField_4.setBounds(178, 89, 42, 20);
-		panel_1.add(textField_4);
+		textFieldporta2 = new JTextField();
+		textFieldporta2.setText("1100");
+		textFieldporta2.setColumns(10);
+		textFieldporta2.setBounds(178, 89, 42, 20);
+		panel_1.add(textFieldporta2);
 		
 		JLabel lblServidorPorta_1 = new JLabel("Servidor 2 PORTA:");
 		lblServidorPorta_1.setBounds(178, 66, 98, 14);
 		panel_1.add(lblServidorPorta_1);
 		
-		textField_5 = new JTextField();
-		textField_5.setText("1101");
-		textField_5.setColumns(10);
-		textField_5.setBounds(178, 143, 42, 20);
-		panel_1.add(textField_5);
+		textFieldporta3 = new JTextField();
+		textFieldporta3.setText("1101");
+		textFieldporta3.setColumns(10);
+		textFieldporta3.setBounds(178, 143, 42, 20);
+		panel_1.add(textFieldporta3);
 		
 		JLabel lblServidorPorta_2 = new JLabel("Servidor 3 PORTA:");
 		lblServidorPorta_2.setBounds(178, 120, 98, 14);
 		panel_1.add(lblServidorPorta_2);
+		
+		JButton btnAtualizar = new JButton("Atualizar");
+		btnAtualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				atualizarIp();
+			}
+		});
+		btnAtualizar.setBounds(10, 179, 89, 23);
+		panel_1.add(btnAtualizar);
 	}
 	
 	public void cadastrar(){
 		String nome = textFieldUser.getText();
 		String senha = passwordFieldSenha.getText();
+		String servidor = null;
+		if(rdbtnServidor.isSelected()){
+			servidor = "servidor1";
+		}else if(rdbtnServidor2.isSelected()){
+			servidor = "servidor2";
+		}else if(rdbtnServidor3.isSelected()){
+			servidor = "servidor3";
+		}
 		JOptionPane.showMessageDialog(null,"Sua senha:" + senha,"Senha",2);//exibe recebido
 		try {
-			String recebido = controller.cadastrar(senha, nome);
+			String recebido = controller.cadastrar(senha, nome, servidor);
 			if(recebido.equals("concluido")){
 				JOptionPane.showMessageDialog(null,"Cadastro concluido:" + recebido,"Efetuado",2);//exibe recebido
 			}else if (recebido.equals("camponaopreenchido")){
@@ -240,6 +272,27 @@ public class ClienteLogin {
 				JOptionPane.showMessageDialog(null,"Cadastro ja existente: " + recebido,"Erro",2);//exibe recebido
 			}
 		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OperacaoInvalidaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void atualizarIp(){
+		String ip1 = textFieldip1.getText();
+		String ip2 = textFieldip2.getText();
+		String ip3 = textFieldip3.getText();
+		String portaS1 = textFieldporta1.getText();
+		int porta1 = Integer.parseInt(portaS1);
+		String portaS2 = textFieldporta2.getText();
+		int porta2 = Integer.parseInt(portaS2);
+		String portaS3 = textFieldporta3.getText();
+		int porta3 = Integer.parseInt(portaS3);
+		try {
+			controller.atualizaIpPorta(ip1, porta1, ip2, porta2, ip3, porta3);
+		} catch (CampoVazioException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

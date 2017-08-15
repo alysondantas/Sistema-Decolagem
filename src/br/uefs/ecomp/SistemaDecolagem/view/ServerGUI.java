@@ -3,6 +3,8 @@ package br.uefs.ecomp.SistemaDecolagem.view;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -15,6 +17,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerDadosServer;
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerServer;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OrigemDestinoIguaisException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.VerticeNaoEncontradoException;
 
@@ -150,16 +153,20 @@ public class ServerGUI {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					
-					controllerD.getTrajeto("Y", "C");
+					//controllerD.getTrajeto("Y", "C");
+					boolean b = controllerD.reservarTrecho("A", "E", "alyson", "servidor1");
+					System.out.println("Trecho aviso: " + b);
 					
-				} catch (CloneNotSupportedException e) {
-					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null,"Nao clonou!","Erro!",2);//exibe recebido
-					e.printStackTrace();
-				}catch (OrigemDestinoIguaisException e) {
+				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (VerticeNaoEncontradoException e) {
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CampoVazioException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

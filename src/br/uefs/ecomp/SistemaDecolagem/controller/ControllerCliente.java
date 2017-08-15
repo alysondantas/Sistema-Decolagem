@@ -6,6 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
+
 /**
  * @author Nilo
  *
@@ -21,16 +24,24 @@ import java.net.UnknownHostException;
 public class ControllerCliente {
 	
 	private static ControllerCliente unicaInstancia;
-	private String ip;
-	private int porta;
+	private String ip1;
+	private int porta1;
+	private String ip2;
+	private int porta2;
+	private String ip3;
+	private int porta3;
 	private String nomeLogin;
 	private String senhaLogin;
 
 	private ControllerCliente(){
 		nomeLogin = "";
 		senhaLogin = "";
-		ip = "10.0.0.107";
-		porta = 1099;
+		ip1 = "10.0.0.107";
+		porta2 = 1100;
+		ip2 = "10.0.0.107";
+		porta2 = 1100;
+		ip3 = "10.0.0.107";
+		porta1 = 1101;
 	}
 
 	/**
@@ -59,11 +70,21 @@ public class ControllerCliente {
 	 * @throws UnknownHostException
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * @throws OperacaoInvalidaException 
 	 */
-	public String cadastrar(String senha, String nome) throws UnknownHostException, IOException, ClassNotFoundException{
+	public String cadastrar(String senha, String nome, String servidor) throws UnknownHostException, IOException, ClassNotFoundException, OperacaoInvalidaException{
 		String pack = "0|" + nome + "|" + senha; //envia 0 para cadastrar o usuario e senha no protocolo
 		//Cria o Socket para buscar o arquivo no servidor 
-		Socket rec = new Socket(ip,porta);
+		Socket rec = null;
+		if(servidor.equals("servidor1")){
+			rec = new Socket(ip1,porta1);
+		}else if(servidor.equals("servidor2")){
+			rec = new Socket(ip2,porta2);
+		}else if(servidor.equals("servidor3")){
+			rec = new Socket(ip3,porta3);
+		}else{
+			throw new OperacaoInvalidaException();
+		}
 
 		//Enviando o nome do arquivo a ser baixado do servidor
 		ObjectOutputStream saida = new ObjectOutputStream(rec.getOutputStream());
@@ -88,12 +109,21 @@ public class ControllerCliente {
 	 * @throws UnknownHostException
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * @throws OperacaoInvalidaException 
 	 */
-	public boolean estaLogado(String senha, String nome)throws UnknownHostException, IOException, ClassNotFoundException{
+	public boolean estaLogado(String senha, String nome,String servidor)throws UnknownHostException, IOException, ClassNotFoundException, OperacaoInvalidaException{
 		String pack = "1|" + nome + "|" + senha;//Envia 1 para logar no servidor.
 		
-		Socket rec = new Socket(ip,porta);//cria o socket de conexão para busca.
-		
+		Socket rec = null;
+		if(servidor.equals("servidor1")){
+			rec = new Socket(ip1,porta1);
+		}else if(servidor.equals("servidor2")){
+			rec = new Socket(ip2,porta2);
+		}else if(servidor.equals("servidor3")){
+			rec = new Socket(ip3,porta3);
+		}else{
+			throw new OperacaoInvalidaException();
+		}
 		ObjectOutputStream saida = new ObjectOutputStream(rec.getOutputStream());//objeto de saida.
 		saida.writeObject(pack);//envia o objeto.
 		saida.flush();
@@ -110,5 +140,26 @@ public class ControllerCliente {
 		else {return false;}
 	}
 	
+	/**
+	 * Metodo que atualiza os ips e portas
+	 * @param ip1
+	 * @param porta1
+	 * @param ip2
+	 * @param porta2
+	 * @param ip3
+	 * @param porta3
+	 * @throws CampoVazioException
+	 */
+	public void atualizaIpPorta(String ip1, int porta1, String ip2, int porta2, String ip3, int porta3) throws CampoVazioException{
+		if(ip1 == null || ip1.equals("") || ip2 == null || ip2.equals("") || ip3 == null || ip3.equals("")){
+			throw new CampoVazioException();
+		}
+		this.ip1 = ip1;
+		this.ip2 = ip2;
+		this.ip3 = ip3;
+		this.porta1 = porta1;
+		this.porta2 = porta2;
+		this.porta3 = porta3;
+	}
 	
 }
