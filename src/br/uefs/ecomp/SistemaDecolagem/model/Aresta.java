@@ -29,7 +29,7 @@ public class Aresta implements Serializable,Cloneable {
 	}
 	
 	public boolean addReserva(ClienteServer cliente){
-		if(poltronasLivres>0){
+		if(poltronasLivres<1){
 			return false;
 		}else{
 			reservas.add(cliente);

@@ -18,7 +18,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerDadosServer;
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerServer;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OrigemDestinoIguaisException;
+import br.uefs.ecomp.SistemaDecolagem.exceptions.SemVagasException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.VerticeNaoEncontradoException;
 
 import javax.swing.JLabel;
@@ -154,7 +156,8 @@ public class ServerGUI {
 				try {
 					
 					//controllerD.getTrajeto("Y", "C");
-					boolean b = controllerD.reservarTrecho("A", "E", "alyson", "servidor1");
+					//boolean b = controllerD.reservarTrecho("A", "E", "alyson", "servidor1");
+					boolean b = controllerD.compraCaminho("alyson", "A", "E", "servidor1");
 					System.out.println("Trecho aviso: " + b);
 					
 				} catch (FileNotFoundException e) {
@@ -167,6 +170,12 @@ public class ServerGUI {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SemVagasException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (OperacaoInvalidaException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

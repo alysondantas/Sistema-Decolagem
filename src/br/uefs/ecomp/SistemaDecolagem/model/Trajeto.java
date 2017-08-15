@@ -1,6 +1,9 @@
 package br.uefs.ecomp.SistemaDecolagem.model;
 
-public class Trajeto {
+import java.io.Serializable;
+
+public class Trajeto implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Vertice origem;
 	private Aresta destino;
 	

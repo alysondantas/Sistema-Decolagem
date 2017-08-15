@@ -568,6 +568,7 @@ public class ControllerDadosServer {
 		Cliente cliente = (Cliente) objectIn.readObject();
 		objectIn.close();
 		cliente.addTrajetoReserva(t);
+		System.out.println("cliente atualizado " + nome);
 		escreveCliente(cliente);
 	}
 
@@ -582,8 +583,11 @@ public class ControllerDadosServer {
 	 * @throws IOException
 	 */
 	public boolean entrarReserva(String origem, String destino,String cliente) throws FileNotFoundException, ClassNotFoundException, IOException{
+		System.out.println("reserva de " + origem + " para " + destino);
 		Aresta aresta = grafo.getAresta(origem, destino);
-		if(aresta.getPoltronasLivres()<1){
+		System.out.println("Vagas: " + aresta.getPoltronasLivres());
+		if(aresta.getPoltronasLivres()>1){
+			System.out.println("aresta encontrada com vagas!");
 			ClienteServer cli = new ClienteServer(cliente, seuNomeServer);
 			Vertice v = grafo.getVertice(origem);
 			Trajeto t = new Trajeto(v,aresta);
@@ -591,7 +595,7 @@ public class ControllerDadosServer {
 
 			return aresta.addReserva(cli);
 		}else{
-
+			
 			return false;
 		}
 
@@ -614,10 +618,13 @@ public class ControllerDadosServer {
 			throw new CampoVazioException();
 		}
 
+		System.out.println("Cliente: " + cliente);
 		if(servidor.equals(seuNomeServer)){
+			System.out.println("Solicitação para o servidor atual: ");
 			return entrarReserva(origem, destino, cliente);
 		}else if(servidor.equals(nomeServidor1)){
 			//conexaoRMI1
+			System.out.println("Solicitação para outro servidor " + servidor);
 			Trajeto comprado = conexaoRMI1.reservaTrecho(origem, destino, cliente, seuNomeServer);
 			if(comprado != null){
 				atualizaClienteReserva(cliente,comprado);
@@ -628,6 +635,7 @@ public class ControllerDadosServer {
 			//envia para o servidor que possui a trajetoria
 		}else if(servidor.equals(nomeServidor2)){
 			//conexaoRMI1
+			System.out.println("Solicitação para outro servidor " + servidor);
 			Trajeto comprado = conexaoRMI2.reservaTrecho(origem, destino, cliente, seuNomeServer);
 			if(comprado != null){
 				atualizaClienteReserva(cliente,comprado);
@@ -637,6 +645,7 @@ public class ControllerDadosServer {
 			}
 			//envia para o servidor que possui a trajetoria
 		}
+		System.out.println("Servidor invalido");
 		return false;
 	}
 
