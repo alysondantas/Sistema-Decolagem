@@ -515,7 +515,7 @@ public class ControllerDadosServer {
 	 */
 	private boolean direcionaCompra(String cliente,String origem, String destino, String servidor, String destinoFinal) throws FileNotFoundException, ClassNotFoundException, SemVagasException, OperacaoInvalidaException, IOException{
 		if(servidor.equals(seuNomeServer)){
-			return realizaCompra(cliente,origem,destino);
+			return realizaCompra(cliente,origem,destino,destinoFinal);
 		}else if(servidor.equals(nomeServidor1)){
 			//conexaoRMI1
 			Trajeto comprado = conexaoRMI1.comprarTrecho(origem, destino);
@@ -587,15 +587,22 @@ public class ControllerDadosServer {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public boolean realizaCompra(String cliente, String origem, String destino) throws SemVagasException, OperacaoInvalidaException, FileNotFoundException, ClassNotFoundException, IOException{
+	public boolean realizaCompra(String cliente, String origem, String destino, String destinoFinal) throws SemVagasException, OperacaoInvalidaException, FileNotFoundException, ClassNotFoundException, IOException{
 		Aresta aresta = grafo.getAresta(origem, destino);
 		if(aresta.getPoltronasLivres()<1){
+			regiaoCritica = false;
+			clienteNaRegiao = "";
+			timeStamp = 0;
 			throw new SemVagasException();
 		}else{
 			aresta.decrementaPoltronasLivres();
 			Vertice v = grafo.getVertice(origem);
 			Trajeto t = new Trajeto(v,aresta);
 			atualizaCliente(cliente,t);
+			if(destino.equals(destinoFinal)){
+				regiaoCritica = false;
+				clienteNaRegiao = "";
+			}
 			return true;
 		}
 	}

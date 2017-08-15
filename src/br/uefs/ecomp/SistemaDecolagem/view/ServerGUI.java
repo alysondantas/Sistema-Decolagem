@@ -157,7 +157,7 @@ public class ServerGUI {
 					
 					//controllerD.getTrajeto("Y", "C");
 					//boolean b = controllerD.reservarTrecho("A", "E", "alyson", "servidor1");
-					boolean b = controllerD.compraCaminho("alyson", "A", "E", "servidor1", "E");
+					boolean b = controllerD.compraCaminho("alyson", "A", "D", "servidor1", "E");
 					System.out.println("Trecho aviso: " + b);
 					
 				} catch (FileNotFoundException e) {
