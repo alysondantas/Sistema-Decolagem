@@ -6,6 +6,12 @@ import java.net.Socket;
 
 import javax.swing.JTextArea;
 
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
+
 public class ThreadServeCliente extends Thread {
 
 	private JTextArea textField;//para atualizar a interface

@@ -4,14 +4,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import br.uefs.ecomp.SistemaDecolagem.util.IGrafo;
+
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
 
 public class Grafo implements IGrafo, Serializable,Cloneable  {
 
 	private static final long serialVersionUID = 1L;
 	private List<Vertice> vertices;
 
+	/**
+	 * Construtor
+	 */
 	public Grafo(){
 		vertices = new ArrayList<>();
 	}
@@ -89,6 +97,11 @@ public class Grafo implements IGrafo, Serializable,Cloneable  {
 		return null;
 	}
 	
+	/**
+	 * Metodo que realiza um clone do grafo
+	 * @return
+	 * @throws CloneNotSupportedException
+	 */
 	public Grafo clonado() throws CloneNotSupportedException{
 		Grafo g = new Grafo();
 		Iterator<Vertice> iteraG1 = vertices.iterator();
@@ -115,29 +128,6 @@ public class Grafo implements IGrafo, Serializable,Cloneable  {
 				v.addAresta(a);
 			}
 		}
-		
-		/*ArrayList<Vertice> verticinhos = (ArrayList<Vertice>) g.vertices;
-		ArrayList<Vertice> clonedList = new ArrayList<Vertice>();
-		clonedList.addAll(verticinhos);
-		ArrayList<Aresta> arestinhas;
-		Iterator<Vertice> iteraV = clonedList.iterator();
-		Iterator<Aresta> iteraA;
-		Vertice v;
-		Aresta a;
-		while(iteraV.hasNext()){
-			v = iteraV.next();
-			arestinhas = (ArrayList<Aresta>) v.getArestas();
-			ArrayList<Aresta> clonedArestas = new ArrayList<Aresta>();
-			iteraA = arestinhas.iterator();
-			while(iteraA.hasNext()){
-				a = iteraA.next();
-				Aresta aClone = a.clone();
-				clonedArestas.add(aClone);
-			}
-			v.setArestas(clonedArestas);
-		}
-		g.vertices = clonedList;
-		*/
 		return g;
 	}
 }

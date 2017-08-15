@@ -1,5 +1,10 @@
 package br.uefs.ecomp.SistemaDecolagem.model;
 
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
 public class ClienteServer {
 	private String nome;
 	private String server;

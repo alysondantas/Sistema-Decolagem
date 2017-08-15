@@ -11,17 +11,27 @@ import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SemVagasException;
 import br.uefs.ecomp.SistemaDecolagem.util.ConexaoRMI;
 
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
+
 public class ConexaoRMIImpl extends UnicastRemoteObject implements ConexaoRMI {
 
 	private static final long serialVersionUID = 1L;
 	private ControllerDadosServer controller;
-	
+
+	/**
+	 * Construtor
+	 * @throws RemoteException
+	 */
 	public ConexaoRMIImpl() throws RemoteException {
 		super();
 		controller = ControllerDadosServer.getInstance();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
 	public Grafo getGrafo() throws RemoteException {
 		// TODO Auto-generated method stub
@@ -56,6 +66,17 @@ public class ConexaoRMIImpl extends UnicastRemoteObject implements ConexaoRMI {
 	public boolean finalizaViagem(String origem, String destino) throws FileNotFoundException, ClassNotFoundException, OperacaoInvalidaException, IOException {
 		// TODO Auto-generated method stub
 		return controller.recebeFinalizaViagem(origem, destino);
+	}
+
+	@Override
+	public boolean regiaoCriticaAcesso(int timeStamp) throws RemoteException {
+		// TODO Auto-generated method stub
+		int meuTime = controller.getTimeStamp();
+		if(meuTime<=timeStamp){
+			return controller.getRegiaoCritica();
+		}else{
+			return true;
+		}
 	}
 
 }

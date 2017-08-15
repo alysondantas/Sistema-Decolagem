@@ -28,9 +28,12 @@ import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.VerticeNaoEncontradoException;
 import br.uefs.ecomp.SistemaDecolagem.model.*;
 import br.uefs.ecomp.SistemaDecolagem.util.ConexaoRMI;
-
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
 public class ControllerDadosServer {
-
 	private static ControllerDadosServer unicaInstancia;
 	private Grafo grafo;
 	private Grafo grafoServers;
@@ -49,6 +52,9 @@ public class ControllerDadosServer {
 	private String lipServer2 = ipServer2;
 	private int lportServer2 = portServer2 + 1000;
 	private int lportServer1 = portServer1 + 1000;
+	private boolean regiaoCritica = false;
+	private String clienteNaRegiao = "";
+	private int timeStamp = 0;
 
 
 	/**
@@ -221,12 +227,6 @@ public class ControllerDadosServer {
 	 * @throws VerticeNaoEncontradoException 
 	 */
 	public void syncGrafos() throws MalformedURLException, RemoteException, NotBoundException, VerticeNaoEncontradoException{
-		/*String nomeServidor1 = "servidor1";
-		String nomeServidor2 = "servidor2";
-		String lipServer1 = ipServer1;
-		String lipServer2 = ipServer2;
-		int lportServer2 = portServer2 + 1000;
-		int lportServer1 = portServer1 + 1000;*/
 		if(seuNomeServer.equals("servidor1")){
 			nomeServidor1 = "servidor2";
 			nomeServidor2 = "servidor3";
@@ -463,12 +463,57 @@ public class ControllerDadosServer {
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws IOException
+	 * @throws InterruptedException 
 	 */
-	public boolean compraCaminho(String cliente, String origem,String destino, String servidor) throws CampoVazioException, SemVagasException, OperacaoInvalidaException, FileNotFoundException, ClassNotFoundException, IOException{
-		if(origem == null || origem.equals("") || destino == null || destino.equals("") || servidor == null || servidor.equals("") || cliente == null || cliente.equals("")){
+	public boolean compraCaminho(String cliente, String origem,String destino, String servidor, String destinoFinal) throws CampoVazioException, SemVagasException, OperacaoInvalidaException, FileNotFoundException, ClassNotFoundException, IOException, InterruptedException{
+		if(origem == null || origem.equals("") || destino == null || destino.equals("") || servidor == null || servidor.equals("") || cliente == null || cliente.equals("") || destinoFinal == null || destinoFinal.equals("")){
 			throw new CampoVazioException();
 		}
 
+		//aqui onde verifica se pode comprar algo
+		if(regiaoCritica){
+			if(cliente.equals(clienteNaRegiao)){
+				return direcionaCompra(cliente, origem, destino, servidor,destinoFinal);
+			}
+		}else{
+			solicitaAcessoCritico(cliente);
+		}
+		Thread.sleep(500);
+		timeStamp++;
+		return compraCaminho(cliente, origem, destino, servidor, destinoFinal);
+	}
+
+	/**
+	 * Metodo que solicita acesso a região critica
+	 * @param cliente
+	 * @throws RemoteException
+	 */
+	public void solicitaAcessoCritico(String cliente) throws RemoteException{
+		boolean resposta = conexaoRMI1.regiaoCriticaAcesso(timeStamp);
+		if(!resposta){
+			resposta = conexaoRMI2.regiaoCriticaAcesso(timeStamp);
+			if(!resposta){
+				regiaoCritica = true;
+				clienteNaRegiao = cliente;
+			}
+		}
+	}
+
+	/**
+	 * Metodo que direciona a compra de um cliente para o servidor correto
+	 * @param cliente
+	 * @param origem
+	 * @param destino
+	 * @param servidor
+	 * @param destinoFinal
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws SemVagasException
+	 * @throws OperacaoInvalidaException
+	 * @throws IOException
+	 */
+	private boolean direcionaCompra(String cliente,String origem, String destino, String servidor, String destinoFinal) throws FileNotFoundException, ClassNotFoundException, SemVagasException, OperacaoInvalidaException, IOException{
 		if(servidor.equals(seuNomeServer)){
 			return realizaCompra(cliente,origem,destino);
 		}else if(servidor.equals(nomeServidor1)){
@@ -476,8 +521,15 @@ public class ControllerDadosServer {
 			Trajeto comprado = conexaoRMI1.comprarTrecho(origem, destino);
 			if(comprado != null){
 				atualizaCliente(cliente,comprado);
+				if(destino.equals(destinoFinal)){
+					regiaoCritica = false;
+					clienteNaRegiao = "";
+					timeStamp = 0;
+				}
 				return true;
 			}else{
+				regiaoCritica = false;
+				clienteNaRegiao = "";
 				return false;
 			}
 			//envia para o servidor que possui a trajetoria
@@ -486,11 +538,20 @@ public class ControllerDadosServer {
 			Trajeto comprado = conexaoRMI2.comprarTrecho(origem, destino);
 			if(comprado != null){
 				atualizaCliente(cliente,comprado);
+				if(destino.equals(destinoFinal)){
+					regiaoCritica = false;
+					clienteNaRegiao = "";
+				}
+				timeStamp = 0;
 				return true;
 			}else{
+				regiaoCritica = false;
+				clienteNaRegiao = "";
 				return false;
 			}
 		}
+		regiaoCritica = false;
+		clienteNaRegiao = "";
 		return false;
 	}
 
@@ -595,7 +656,7 @@ public class ControllerDadosServer {
 
 			return aresta.addReserva(cli);
 		}else{
-			
+
 			return false;
 		}
 
@@ -907,5 +968,13 @@ public class ControllerDadosServer {
 
 	public Grafo getGrafoServer(){
 		return grafoServers;
+	}
+
+	public boolean getRegiaoCritica(){
+		return regiaoCritica;
+	}
+
+	public int getTimeStamp(){
+		return timeStamp;
 	}
 }

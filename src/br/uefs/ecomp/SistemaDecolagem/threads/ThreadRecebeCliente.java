@@ -18,6 +18,11 @@ import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OrigemDestinoIguaisException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.SenhaIncorretaException;
 
+/**
+ * 
+ * @author Alyson & Nilo
+ *
+ */
 
 public class ThreadRecebeCliente extends Thread {
     private Socket cliente;//socket do cliente

@@ -10,6 +10,11 @@ import java.util.List;
 import br.uefs.ecomp.SistemaDecolagem.controller.ControllerDadosServer;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
 
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
 public class Aresta implements Serializable,Cloneable {
 	private static final long serialVersionUID = 1L;
 	private Vertice destino;
@@ -19,6 +24,12 @@ public class Aresta implements Serializable,Cloneable {
 	private String nomeServer;
 	private List<ClienteServer> reservas;
 	
+	/**
+	 * Construtor
+	 * @param destino
+	 * @param qtdPoltronas
+	 * @param nomeServer
+	 */
 	public Aresta(Vertice destino, int qtdPoltronas, String nomeServer){
 		this.setDestino(destino);
 		this.qtdPoltronas = qtdPoltronas;
@@ -28,6 +39,11 @@ public class Aresta implements Serializable,Cloneable {
 		this.nomeServer = nomeServer;
 	}
 	
+	/**
+	 * Metodo que adiciona uma reserva de um cliente
+	 * @param cliente
+	 * @return
+	 */
 	public boolean addReserva(ClienteServer cliente){
 		if(poltronasLivres<1){
 			return false;
@@ -37,6 +53,12 @@ public class Aresta implements Serializable,Cloneable {
 		}
 	}
 	
+	/**
+	 * Metodo que remove um cliente de uma reserva
+	 * @param cliente
+	 * @param server
+	 * @return
+	 */
 	public boolean removeReserva(String cliente, String server){
 		Iterator<ClienteServer> itera = reservas.iterator();
 		ClienteServer aux = null;
@@ -74,6 +96,14 @@ public class Aresta implements Serializable,Cloneable {
 		return poltronasLivres;
 	}
 
+	/**
+	 * Metodo que incrementa as poltronas livres
+	 * @return
+	 * @throws OperacaoInvalidaException
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public synchronized boolean incrementaPoltronasLivres() throws OperacaoInvalidaException, FileNotFoundException, ClassNotFoundException, IOException {
 		if(poltronasLivres < qtdPoltronas){
 			if(reservas.size() < 1){
@@ -89,6 +119,10 @@ public class Aresta implements Serializable,Cloneable {
 		}
 	}
 	
+	/**
+	 * Metodo que decrementa poltronas livres
+	 * @throws OperacaoInvalidaException
+	 */
 	public void decrementaPoltronasLivres() throws OperacaoInvalidaException {
 		if(poltronasLivres < 1){
 			throw new OperacaoInvalidaException();

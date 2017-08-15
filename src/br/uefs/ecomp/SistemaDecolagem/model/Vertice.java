@@ -4,12 +4,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
 public class Vertice implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String nome;
 	private List<Aresta> arestas;
 	
-	
+	/**
+	 * Construtor
+	 * @param nome
+	 */
 	public Vertice(String nome){
 		this.nome = nome;
 		arestas = new ArrayList<>();

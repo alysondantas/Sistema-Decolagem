@@ -157,7 +157,7 @@ public class ServerGUI {
 					
 					//controllerD.getTrajeto("Y", "C");
 					//boolean b = controllerD.reservarTrecho("A", "E", "alyson", "servidor1");
-					boolean b = controllerD.compraCaminho("alyson", "A", "E", "servidor1");
+					boolean b = controllerD.compraCaminho("alyson", "A", "E", "servidor1", "E");
 					System.out.println("Trecho aviso: " + b);
 					
 				} catch (FileNotFoundException e) {
@@ -176,6 +176,9 @@ public class ServerGUI {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (OperacaoInvalidaException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

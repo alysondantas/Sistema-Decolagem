@@ -8,6 +8,12 @@ import br.uefs.ecomp.SistemaDecolagem.controller.ControllerDadosServer;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OrigemDestinoIguaisException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.VerticeNaoEncontradoException;
 
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
+
 public class Caminho {
 	private Grafo grafo;
 	private String origemS;
@@ -16,6 +22,12 @@ public class Caminho {
 	private List<Vertice> superiores;
 	private List<Trajeto> trajeto;
 
+	/**
+	 * Construtor
+	 * @param origem
+	 * @param destino
+	 * @throws CloneNotSupportedException
+	 */
 	public Caminho(String origem, String destino) throws CloneNotSupportedException{
 		this.origemS = origem;
 		this.geral = "";
@@ -25,6 +37,12 @@ public class Caminho {
 		grafo = ControllerDadosServer.getInstance().getGrafoServer().clonado();
 	}
 
+	/**
+	 * Metodo que cria um caminho
+	 * @return
+	 * @throws OrigemDestinoIguaisException
+	 * @throws VerticeNaoEncontradoException
+	 */
 	public String criaCaminho() throws OrigemDestinoIguaisException, VerticeNaoEncontradoException{
 		if(origemS.equals(destinoS)){
 			throw new OrigemDestinoIguaisException();
@@ -46,6 +64,15 @@ public class Caminho {
 		return geral;
 	}
 
+	/**
+	 * Metodo que percorre um caminho até o fundo
+	 * @param atual
+	 * @param destino
+	 * @param s
+	 * @param reserva
+	 * @param ultimo
+	 * @param anterior
+	 */
 	public void vaiFundo(Vertice atual, Vertice destino, String s, String reserva, Trajeto ultimo, Trajeto anterior){
 		List<Aresta> listArestas = atual.getArestas();
 		Iterator<Aresta> iteraArestas = listArestas.iterator();

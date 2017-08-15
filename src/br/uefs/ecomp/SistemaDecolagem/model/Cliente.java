@@ -4,6 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
+
 public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String nome;
@@ -11,6 +17,11 @@ public class Cliente implements Serializable {
     private List<Trajeto> trajetos;
     private List<Trajeto> trajetosReservados;
     
+    /**
+     * Construtor
+     * @param nome
+     * @param senha
+     */
     public Cliente(String nome, String senha){
     	this.setNome(nome);
     	this.setSenha(senha);

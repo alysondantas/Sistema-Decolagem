@@ -9,6 +9,11 @@ import br.uefs.ecomp.SistemaDecolagem.threads.ThreadConexaoRMI;
 import br.uefs.ecomp.SistemaDecolagem.threads.ThreadRecebeCliente;
 import br.uefs.ecomp.SistemaDecolagem.threads.ThreadServeCliente;
 
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
 
 public class ControllerServer {
 
@@ -16,6 +21,9 @@ public class ControllerServer {
 	private ServerSocket server;
 	private ThreadRecebeCliente thread;
 
+	/**
+	 * Construtor
+	 */
 	private ControllerServer(){
 
 	}

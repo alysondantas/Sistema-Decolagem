@@ -9,18 +9,29 @@ import javax.swing.JTextArea;
 import br.uefs.ecomp.SistemaDecolagem.model.ConexaoRMIImpl;
 import br.uefs.ecomp.SistemaDecolagem.util.ConexaoRMI;
 
+/**
+ * 
+ * @author Alyson Dantas
+ *
+ */
 
 public class ThreadConexaoRMI extends Thread {
 	private String nomeServer;
 	private int port;
 	private JTextArea textField;//para atualizar a interface
-	
+
+	/**
+	 * Construtor
+	 * @param nome
+	 * @param port
+	 * @param text
+	 */
 	public ThreadConexaoRMI(String nome, int port, JTextArea text){
 		this.nomeServer = nome;
 		this.port = port;
 		this.textField = text;
 	}
-	
+
 	/**
 	 * Metodo Run da thread
 	 */
@@ -38,9 +49,5 @@ public class ThreadConexaoRMI extends Thread {
 			// TODO: handle exception
 			System.out.println("Erro ao estabelecer conexão RMI "+ e.getMessage());
 		}
-		
-		/*while(true){
-			
-		}*/
 	}
 }
