@@ -195,7 +195,7 @@ public class ControllerCliente {
 		String pack = "2|";
 		
 		//Socket rec = new Socket(ControllerCliente.ipAtual,ControllerCliente.portaAtual);
-		Socket rec = new Socket("220.0.0.108",1099);
+		Socket rec = new Socket(ipAtual,portaAtual);
 
 		//Enviando o código do arquivo a ser baixado do servidor
 		ObjectOutputStream saida = new ObjectOutputStream(rec.getOutputStream());
