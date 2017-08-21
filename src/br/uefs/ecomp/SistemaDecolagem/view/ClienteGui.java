@@ -5,25 +5,33 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import br.uefs.ecomp.SistemaDecolagem.controller.ControllerGui;
+import br.uefs.ecomp.SistemaDecolagem.controller.ControllerCliente;
+
 
 import javax.swing.JTabbedPane;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JList;
 
 public class ClienteGui extends JFrame {
-	private ControllerGui controller = ControllerGui.getInstance();
-	
+	private ControllerCliente controller = ControllerCliente.getInstance();
+	JComboBox<String> listOrigem;
+	String[] temp;
+	JButton btnAtualizarRotas;
+	JButton btnComprar;
+	JComboBox <String> listTrechos;
+	JComboBox <String>listDestino;
+	JButton btnBuscar;
 
 	private JPanel contentPanePrincipal;
 
@@ -47,6 +55,7 @@ public class ClienteGui extends JFrame {
 	 * Create the frame.
 	 */
 	public ClienteGui() {
+		temp = new String[5];
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 908, 376);
 		contentPanePrincipal = new JPanel();
@@ -76,35 +85,50 @@ public class ClienteGui extends JFrame {
 		JPanel panelComprarPassagem = new JPanel();
 		tabbedPanePrincipal.addTab("Comprar Passagem", null, panelComprarPassagem, null);
 		
-		JButton btnBuscar = new JButton("buscar");
+		 btnBuscar = new JButton("buscar");
 		
-		DefaultListModel modelOrigem = new DefaultListModel();
-		JList listOrigem = new JList(modelOrigem);
+		//DefaultListModel modelOrigem = new DefaultListModel();
+		listOrigem = new JComboBox<String>();
+		
 		
 		
 		JLabel lblSelecioneAOrigem = new JLabel("Selecione a origem");
 		
 		JLabel lblSelecioneODestino = new JLabel("Selecione o Destino");
 		
-		JList listDestino = new JList();
+		 listDestino = new JComboBox<String>();
 		
 		JLabel lblSelecioneOsTrechos = new JLabel("Selecione os trechos");
 		
-		JList listTrechos = new JList();
+		 listTrechos = new JComboBox<String>();
 		
-		JButton btnComprar = new JButton("Comprar");
+		 btnComprar = new JButton("Comprar");
 		
-		JButton btnAtualizarRotas = new JButton("Atualizar");
+		 btnAtualizarRotas = new JButton("Atualizar");
 		
 		btnAtualizarRotas.addActionListener(new ActionListener(){
-
+			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+			
+				try { temp = controller.carregarOrigemDestino().clone(); //ControllerCliente.getInstance().carregarOrigemDestino().clone();
+				listOrigem.addItem(temp[0]);
+				listOrigem.addItem(temp[1]);
+				listOrigem.addItem(temp[2]);
+				listOrigem.addItem(temp[3]);
+				listOrigem.addItem(temp[4]);
 				
-				try {
-					for(int i = 0; i<controller.carregarOrigemDestino().length; i++ ){
-					modelOrigem.addElement(controller.carregarOrigemDestino());
-					}
+					//for(int i = 0; i<temp.length; i++ ){
+						//listOrigem.insertItemAt(controller.carregarOrigemDestino(), i);
+						//listOrigem.addItem(temp[i]);
+						//listOrigem.insertItemAt(temp[i], i);
+						//listOrigem.addItem(controller.carregarOrigemDestino());
+					//}
+					//for(int i=0; i< controller.carregarOrigemDestino().length; i++){
+						//listOrigem.insertItemAt(controller.carregarOrigemDestino(), i);
+						//listOrigem.addItem(controller.carregarOrigemDestino());
+					//}
+					//listOrigem.addItem(controller.carregarOrigemDestino());
 				} catch (ClassNotFoundException | IOException e) {
 					
 					e.printStackTrace();
@@ -178,7 +202,7 @@ public class ClienteGui extends JFrame {
 		
 		JLabel lblPassagemAdquirida = new JLabel("Passagem Adquirida");
 		
-		JList listTrechosAdquiridos = new JList();
+		JComboBox listTrechosAdquiridos = new JComboBox();
 		GroupLayout gl_panelPassagemAdquirida = new GroupLayout(panelPassagemAdquirida);
 		gl_panelPassagemAdquirida.setHorizontalGroup(
 			gl_panelPassagemAdquirida.createParallelGroup(Alignment.LEADING)

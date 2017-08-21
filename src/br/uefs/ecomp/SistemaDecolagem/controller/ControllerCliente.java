@@ -194,8 +194,8 @@ public class ControllerCliente {
 	public String[] carregarOrigemDestino() throws UnknownHostException, IOException, ClassNotFoundException{
 		String pack = "2|";
 		
-		Socket rec = new Socket(ControllerCliente.ipAtual,ControllerCliente.portaAtual);
-		
+		//Socket rec = new Socket(ControllerCliente.ipAtual,ControllerCliente.portaAtual);
+		Socket rec = new Socket("220.0.0.108",1099);
 
 		//Enviando o código do arquivo a ser baixado do servidor
 		ObjectOutputStream saida = new ObjectOutputStream(rec.getOutputStream());
