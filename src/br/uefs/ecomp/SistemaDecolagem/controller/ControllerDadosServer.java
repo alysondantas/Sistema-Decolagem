@@ -619,6 +619,7 @@ public class ControllerDadosServer {
 		ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream("/sistemaDecolagem/" + seuNomeServer +"/clientes/" + nome + ".dat")));//recupera a conta
 		Cliente cliente = (Cliente) objectIn.readObject();
 		objectIn.close();
+		cliente.clearTrajetoAndamenot();
 		cliente.addTrajeto(t);
 		escreveCliente(cliente);
 	}
@@ -631,11 +632,12 @@ public class ControllerDadosServer {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public void atualizaClienteReserva(String nome, Trajeto t) throws FileNotFoundException, IOException, ClassNotFoundException{
+	public void atualizaClienteReserva(String nome, Trajeto t, String bkpTrajeto) throws FileNotFoundException, IOException, ClassNotFoundException{
 		ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream("/sistemaDecolagem/" + seuNomeServer +"/clientes/" + nome + ".dat")));//recupera a conta
 		Cliente cliente = (Cliente) objectIn.readObject();
 		objectIn.close();
 		cliente.addTrajetoReserva(t);
+		cliente.setBkpTrajeto(bkpTrajeto);
 		System.out.println("cliente atualizado " + nome);
 		escreveCliente(cliente);
 	}
@@ -650,7 +652,7 @@ public class ControllerDadosServer {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public boolean entrarReserva(String origem, String destino,String cliente) throws FileNotFoundException, ClassNotFoundException, IOException{
+	public boolean entrarReserva(String origem, String destino,String cliente, String bkpTrajeto) throws FileNotFoundException, ClassNotFoundException, IOException{
 		System.out.println("reserva de " + origem + " para " + destino);
 		Aresta aresta = grafo.getAresta(origem, destino);
 		System.out.println("Vagas: " + aresta.getPoltronasLivres());
@@ -659,7 +661,7 @@ public class ControllerDadosServer {
 			ClienteServer cli = new ClienteServer(cliente, seuNomeServer);
 			Vertice v = grafo.getVertice(origem);
 			Trajeto t = new Trajeto(v,aresta);
-			atualizaClienteReserva(cliente,t);
+			atualizaClienteReserva(cliente,t,bkpTrajeto);
 
 			return aresta.addReserva(cli);
 		}else{
@@ -681,7 +683,7 @@ public class ControllerDadosServer {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public boolean reservarTrecho(String origem, String destino, String cliente, String servidor) throws CampoVazioException, FileNotFoundException, ClassNotFoundException, IOException{
+	public boolean reservarTrecho(String origem, String destino, String cliente, String servidor, String bkpTrajeto) throws CampoVazioException, FileNotFoundException, ClassNotFoundException, IOException{
 		if(origem == null || origem.equals("") || destino == null || destino.equals("") || servidor == null || servidor.equals("") || cliente == null || cliente.equals("")){
 			throw new CampoVazioException();
 		}
@@ -689,13 +691,13 @@ public class ControllerDadosServer {
 		System.out.println("Cliente: " + cliente);
 		if(servidor.equals(seuNomeServer)){
 			System.out.println("Solicitação para o servidor atual: ");
-			return entrarReserva(origem, destino, cliente);
+			return entrarReserva(origem, destino, cliente,bkpTrajeto);
 		}else if(servidor.equals(nomeServidor1)){
 			//conexaoRMI1
 			System.out.println("Solicitação para outro servidor " + servidor);
 			Trajeto comprado = conexaoRMI1.reservaTrecho(origem, destino, cliente, seuNomeServer);
 			if(comprado != null){
-				atualizaClienteReserva(cliente,comprado);
+				atualizaClienteReserva(cliente,comprado,bkpTrajeto);
 				return true;
 			}else{
 				return false;
@@ -706,7 +708,7 @@ public class ControllerDadosServer {
 			System.out.println("Solicitação para outro servidor " + servidor);
 			Trajeto comprado = conexaoRMI2.reservaTrecho(origem, destino, cliente, seuNomeServer);
 			if(comprado != null){
-				atualizaClienteReserva(cliente,comprado);
+				atualizaClienteReserva(cliente,comprado,bkpTrajeto);
 				return true;
 			}else{
 				return false;
@@ -906,7 +908,8 @@ public class ControllerDadosServer {
 		}
 		if(aux != null){
 			boolean b = cliente.removeTrajetoReserva(aux);
-			cliente.addTrajetoReserva(aux);
+			cliente.addTrajetoAndamento(aux);
+			//cliente.addTrajetoReserva(aux);
 			escreveCliente(cliente);
 			return b;
 		}

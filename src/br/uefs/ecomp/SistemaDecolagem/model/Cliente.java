@@ -16,6 +16,8 @@ public class Cliente implements Serializable {
     private String senha;
     private List<Trajeto> trajetos;
     private List<Trajeto> trajetosReservados;
+    private List<Trajeto> trajetosAndamento;
+    private String bkpTrajeto;
     
     /**
      * Construtor
@@ -27,6 +29,7 @@ public class Cliente implements Serializable {
     	this.setSenha(senha);
     	trajetosReservados = new ArrayList<Trajeto>();
     	setTrajetos(new ArrayList<Trajeto>());
+    	trajetosAndamento = new ArrayList<>();
     }
 
 	public String getNome() {
@@ -71,5 +74,29 @@ public class Cliente implements Serializable {
 
 	public void setTrajetosReservados(List<Trajeto> trajetosReservados) {
 		this.trajetosReservados = trajetosReservados;
+	}
+
+	public String getBkpTrajeto() {
+		return bkpTrajeto;
+	}
+
+	public void setBkpTrajeto(String bkpTrajeto) {
+		this.bkpTrajeto = bkpTrajeto;
+	}
+
+	public List<Trajeto> getTrajetosAndamento() {
+		return trajetosAndamento;
+	}
+
+	public void setTrajetosAndamento(List<Trajeto> trajetosAndamento) {
+		this.trajetosAndamento = trajetosAndamento;
+	}
+	
+	public void addTrajetoAndamento(Trajeto a){
+		trajetosAndamento.add(a);
+	}
+	
+	public void clearTrajetoAndamenot(){
+		trajetosAndamento = new ArrayList<>();
 	}
 }
