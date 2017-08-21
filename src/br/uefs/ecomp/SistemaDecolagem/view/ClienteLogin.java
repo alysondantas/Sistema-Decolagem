@@ -136,15 +136,30 @@ public class ClienteLogin {
 			public void actionPerformed(ActionEvent arg1){
 				String servidor = null;
 				if(rdbtnServidor.isSelected()){
-					servidor = "servidor1";
+					servidor = "servidor1"; 
+					int porta1 = Integer.parseInt(textFieldporta1.getText());// precisava fazer a conversão de string para inteiro, para não ficar muito grande no metódo, fiz separado.
+					ControllerCliente.getInstance().setIpAtual(textFieldip1.getText()); // insere o valor do ip do serv 1 na classe ControllerCliente, utilizado no metodo buscarOrigemDestino.
+					ControllerCliente.getInstance().setPortaAtual(porta1); //insere o valor da porta na classe ControllerCliente, utilizado no metodo buscarOrigemDestino.
+					ControllerCliente.getInstance().setServidorAtual(servidor); // armazena o valor do servidor para fins de uso posterior. 
+					
 				}else if(rdbtnServidor2.isSelected()){
 					servidor = "servidor2";
+					int porta2 = Integer.parseInt(textFieldporta2.getText()); // precisava fazer a conversão de string para inteiro, para não ficar muito grande no metódo, fiz separado.
+					ControllerCliente.getInstance().setIpAtual(textFieldip2.getText()); // insere o valor do ip do serv 2 na classe ControllerCliente, utilizado no metodo buscarOrigemDestino.
+					ControllerCliente.getInstance().setPortaAtual(porta2); //insere o valor da porta na classe ControllerCliente, utilizado no metodo buscarOrigemDestino.
+					ControllerCliente.getInstance().setServidorAtual(servidor); // armazena o valor do servidor para fins de uso posterior. 
+					
 				}else if(rdbtnServidor3.isSelected()){
 					servidor = "servidor3";
+					int porta3 = Integer.parseInt(textFieldporta3.getText()); // precisava fazer a conversão de string para inteiro, para não ficar muito grande no metódo, fiz separado.
+					ControllerCliente.getInstance().setIpAtual(textFieldip3.getText()); // insere o valor do ip do serv 3 na classe ControllerCliente, utilizado no metodo buscarOrigemDestino.
+					ControllerCliente.getInstance().setPortaAtual(porta3); //insere o valor da porta na classe ControllerCliente, utilizado no metodo buscarOrigemDestino.
+					ControllerCliente.getInstance().setServidorAtual(servidor);// armazena o valor do servidor para fins de uso posterior. 
 				}
 				try {
 					try {
 						if(controller.estaLogado(passwordFieldSenha.getText(),textFieldUser.getText(),servidor)==true){
+							
 							ClienteGui clienteGui = new ClienteGui();
 							clienteGui.setVisible(true);
 							
