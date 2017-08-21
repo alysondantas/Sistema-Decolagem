@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.regex.Pattern;
 
 import br.uefs.ecomp.SistemaDecolagem.exceptions.CampoVazioException;
 import br.uefs.ecomp.SistemaDecolagem.exceptions.OperacaoInvalidaException;
@@ -32,11 +33,14 @@ public class ControllerCliente {
 	private int porta3;
 	private String nomeLogin;
 	private String senhaLogin;
+	private static String servidorAtual;
+	private static String ipAtual;
+	private static int portaAtual;
 
 	private ControllerCliente(){
 		nomeLogin = "";
 		senhaLogin = "";
-		ip1 = "10.0.0.107";
+		ip1 = "10.0.0.111";
 		porta2 = 1100;
 		ip2 = "10.0.0.107";
 		porta2 = 1100;
@@ -60,6 +64,26 @@ public class ControllerCliente {
 	 */
 	public static void zerarSingleton (){
 		unicaInstancia = null;
+	}
+	/**
+	 * Armazena o servidor atual que o cliente foi logado.
+	 */
+	public void setServidorAtual(String servidor){
+		
+		ControllerCliente.servidorAtual = servidor;
+	}
+	/**
+	 *Armazena o ip atual do servidor utilizado. 
+	 */
+	public void setIpAtual(String ipAtual){
+		ControllerCliente.ipAtual = ipAtual;
+	}
+	/**
+	 *Armazena a porta atual utilizada pelo cliente. 
+	 */
+	public void setPortaAtual(int portaAtual){
+		ControllerCliente.portaAtual = portaAtual;
+		
 	}
 	
 	/**
@@ -160,6 +184,35 @@ public class ControllerCliente {
 		this.porta1 = porta1;
 		this.porta2 = porta2;
 		this.porta3 = porta3;
+	}
+	/**
+	 * Metodo que solicita e recebe os vertices do servidor.
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public String[] carregarOrigemDestino() throws UnknownHostException, IOException, ClassNotFoundException{
+		String pack = "2|";
+		
+		Socket rec = new Socket(ControllerCliente.ipAtual,ControllerCliente.portaAtual);
+		
+
+		//Enviando o código do arquivo a ser baixado do servidor
+		ObjectOutputStream saida = new ObjectOutputStream(rec.getOutputStream());
+		saida.writeObject(pack);
+		saida.flush();
+
+		ObjectInputStream entrada = new ObjectInputStream(rec.getInputStream());//recebo o pacote do cliente
+		String recebido = (String) entrada.readObject(); 
+		saida.close();//fecha a comunicação com o servidor
+		entrada.close();
+		rec.close();
+		
+		String [] origemDestino = new String[5];
+		 origemDestino = recebido.split(Pattern.quote("$"));//coloca no array cada vertice contendo origem e destino, visto que origem e destino são iguais.
+		
+		
+		return origemDestino;
 	}
 	
 }
