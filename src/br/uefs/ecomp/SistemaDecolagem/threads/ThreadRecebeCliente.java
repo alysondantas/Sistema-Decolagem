@@ -98,7 +98,7 @@ public class ThreadRecebeCliente extends Thread {
                 	String origem = informacoes[1];
                 	String destino = informacoes[2];
                 	s = "retornando os trajetos";
-                	saida.writeObject(controller.getTrajeto(origem, destino));
+                	saida.writeObject(controller.getTrajeto(origem, destino));// retorna todos os trajetos
                     
 
                     break;

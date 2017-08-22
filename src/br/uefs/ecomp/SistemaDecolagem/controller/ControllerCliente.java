@@ -224,8 +224,8 @@ public class ControllerCliente {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public String[] carregarTrechos(String origem, String destino) throws UnknownHostException, IOException, ClassNotFoundException {
-		String pack = "3|"+origem+"|"+destino;
+	public String[] carregarTrechos(Object origem, Object destino) throws UnknownHostException, IOException, ClassNotFoundException {
+		String pack = "3|"+(String)origem+"|"+(String)destino;// precisei converter em String, visto que a assinatura do combobox era Object.
 		
 		//Socket rec = new Socket(ControllerCliente.ipAtual,ControllerCliente.portaAtual);
 		Socket rec = new Socket(ipAtual,portaAtual);

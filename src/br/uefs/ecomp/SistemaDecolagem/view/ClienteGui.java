@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,7 +14,6 @@ import br.uefs.ecomp.SistemaDecolagem.controller.ControllerCliente;
 
 
 import javax.swing.JTabbedPane;
-import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -86,6 +84,24 @@ public class ClienteGui extends JFrame {
 		tabbedPanePrincipal.addTab("Comprar Passagem", null, panelComprarPassagem, null);
 		
 		 btnBuscar = new JButton("buscar");
+		 btnBuscar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+						String[] aux;// String auxiliar para armazenar os caminhos e inserir no combobox listTrechos.
+				try {
+					aux = controller.carregarTrechos(listOrigem.getSelectedItem(), listDestino.getSelectedItem());//recebe os trechos. Apesar de ser object, posteriormente é convertido em String.
+					for(int i = 0; i<aux.length; i++) {
+						listTrechos.addItem(aux[i]);
+					}
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+			 
+		 });
 		
 		//DefaultListModel modelOrigem = new DefaultListModel();
 		listOrigem = new JComboBox<String>();
