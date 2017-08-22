@@ -393,11 +393,12 @@ public class ControllerDadosServer {
 		String todos = "";
 		while(iteraV.hasNext()){
 			aux = iteraV.next();
-			todos = todos + aux.getNome() + "$";
+			//todos = todos + aux.getNome() + "$";
+			System.out.println("esta no" + aux.getNome());
 			if(!iteraV.hasNext()){
-				todos = todos + aux.getNome() + "$";
-			}else{
 				todos = todos + aux.getNome();
+			}else{
+				todos = todos + aux.getNome() + "$";
 			}
 		}
 		return todos;

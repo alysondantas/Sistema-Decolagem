@@ -153,35 +153,13 @@ public class ServerGUI {
 		btnNewButton = new JButton("New button");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
+				
 					
 					//controllerD.getTrajeto("Y", "C");
 					//boolean b = controllerD.reservarTrecho("A", "E", "alyson", "servidor1");
-					boolean b = controllerD.compraCaminho("alyson", "A", "D", "servidor1", "E");
-					System.out.println("Trecho aviso: " + b);
-					
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (CampoVazioException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SemVagasException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (OperacaoInvalidaException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+					String b = controllerD.solicitaTodosVertices();
+					System.out.println("Todos os vertices: " + b);
+				
 			}
 		});
 		btnNewButton.setBounds(127, 187, 89, 23);
