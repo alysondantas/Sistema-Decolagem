@@ -122,18 +122,7 @@ public class ClienteGui extends JFrame {
 				listDestino.addItem(temp[2]);
 				listDestino.addItem(temp[3]);
 				listDestino.addItem(temp[4]);
-				
-					//for(int i = 0; i<temp.length; i++ ){
-						//listOrigem.insertItemAt(controller.carregarOrigemDestino(), i);
-						//listOrigem.addItem(temp[i]);
-						//listOrigem.insertItemAt(temp[i], i);
-						//listOrigem.addItem(controller.carregarOrigemDestino());
-					//}
-					//for(int i=0; i< controller.carregarOrigemDestino().length; i++){
-						//listOrigem.insertItemAt(controller.carregarOrigemDestino(), i);
-						//listOrigem.addItem(controller.carregarOrigemDestino());
-					//}
-					//listOrigem.addItem(controller.carregarOrigemDestino());
+
 				} catch (ClassNotFoundException | IOException e) {
 					
 					e.printStackTrace();

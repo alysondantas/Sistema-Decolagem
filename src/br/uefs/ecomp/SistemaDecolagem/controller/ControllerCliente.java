@@ -215,4 +215,33 @@ public class ControllerCliente {
 		return origemDestino;
 	}
 	
+	/**
+	 * Metódo responsável por carregar todos os trechos.
+	 * @param origem
+	 * @param destino
+	 * @return
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public String[] carregarTrechos(String origem, String destino) throws UnknownHostException, IOException, ClassNotFoundException {
+		String pack = "3|"+origem+"|"+destino;
+		
+		//Socket rec = new Socket(ControllerCliente.ipAtual,ControllerCliente.portaAtual);
+		Socket rec = new Socket(ipAtual,portaAtual);
+
+		//Enviando o código do arquivo a ser baixado do servidor
+		ObjectOutputStream saida = new ObjectOutputStream(rec.getOutputStream());
+		saida.writeObject(pack);
+		saida.flush();
+
+		ObjectInputStream entrada = new ObjectInputStream(rec.getInputStream());//recebo o pacote do cliente
+		String recebido = (String) entrada.readObject(); 
+		saida.close();//fecha a comunicação com o servidor
+		entrada.close();
+		rec.close();
+		String[] trechos = recebido.split(Pattern.quote("$"));
+		return trechos;
+	}
+	
 }

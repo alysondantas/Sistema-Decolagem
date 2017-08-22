@@ -94,7 +94,11 @@ public class ThreadRecebeCliente extends Thread {
                 		saida.writeObject(controller.solicitaTodosVertices());//retorna todos os vertices
                     
                     break;
-                case 3: 
+                case 3: //pega todos os trajetos entre origem e destino.
+                	String origem = informacoes[1];
+                	String destino = informacoes[2];
+                	s = "retornando os trajetos";
+                	saida.writeObject(controller.getTrajeto(origem, destino));
                     
 
                     break;
