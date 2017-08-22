@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -30,8 +31,10 @@ public class ClienteGui extends JFrame {
 	JComboBox <String> listTrechos;
 	JComboBox <String>listDestino;
 	JButton btnBuscar;
-
+	private String [] auxTrechos= {"sem trechos"};
 	private JPanel contentPanePrincipal;
+	private JLabel lblUser;
+	private String serv;
 
 	/**
 	 * Launch the application.
@@ -62,7 +65,7 @@ public class ClienteGui extends JFrame {
 		
 		JTabbedPane tabbedPanePrincipal = new JTabbedPane(JTabbedPane.TOP);
 		
-		JLabel lblUser = new JLabel("User");
+		 lblUser = new JLabel("User");
 		GroupLayout gl_contentPanePrincipal = new GroupLayout(contentPanePrincipal);
 		gl_contentPanePrincipal.setHorizontalGroup(
 			gl_contentPanePrincipal.createParallelGroup(Alignment.LEADING)
@@ -88,11 +91,16 @@ public class ClienteGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-						String[] aux;// String auxiliar para armazenar os caminhos e inserir no combobox listTrechos.
+						String[] aux;// Vetor auxiliar para quebra de trechos.
 				try {
-					aux = controller.carregarTrechos(listOrigem.getSelectedItem(), listDestino.getSelectedItem());//recebe os trechos. Apesar de ser object, posteriormente é convertido em String.
-					for(int i = 0; i<aux.length; i++) {
-						listTrechos.addItem(aux[i]);
+					auxTrechos = controller.carregarTrechos(listOrigem.getSelectedItem(), listDestino.getSelectedItem());//recebe os trechos. Apesar de ser object, posteriormente é convertido em String.
+					
+					for(int i = 0; i<auxTrechos.length; i+=3) {
+						aux = auxTrechos[i].split(Pattern.quote("!"));
+						//String[] aux2 = aux[i].split(Pattern.quote("!"));
+						listTrechos.addItem(auxTrechos[i]);
+						//listTrechos.addItem(aux[i]);
+						//listTrechos.addItem(aux2[i]);
 					}
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
@@ -117,8 +125,23 @@ public class ClienteGui extends JFrame {
 		JLabel lblSelecioneOsTrechos = new JLabel("Selecione os trechos");
 		
 		 listTrechos = new JComboBox<String>();
+		 
 		
 		 btnComprar = new JButton("Comprar");
+		 btnComprar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					controller.comprar(lblUser.getText(),(String) listOrigem.getSelectedItem(),(String) listDestino.getSelectedItem(),serv, (String)listTrechos.getSelectedItem());
+				} catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			 
+		 });
 		
 		 btnAtualizarRotas = new JButton("Atualizar");
 		
@@ -145,6 +168,7 @@ public class ClienteGui extends JFrame {
 				}
 			}
 		});
+		
 		
 		JLabel lblAtualizarRotas = new JLabel("Atualizar Rotas");
 		GroupLayout gl_panelComprarPassagem = new GroupLayout(panelComprarPassagem);
@@ -235,4 +259,11 @@ public class ClienteGui extends JFrame {
 		panelPassagemAdquirida.setLayout(gl_panelPassagemAdquirida);
 		contentPanePrincipal.setLayout(gl_contentPanePrincipal);
 	}
+	public void setLabelUser(String nomeUser) {
+		lblUser.setText(nomeUser);	
+	}
+	public void setServ(String servidor) {
+		this.serv = servidor;
+	}
+
 }

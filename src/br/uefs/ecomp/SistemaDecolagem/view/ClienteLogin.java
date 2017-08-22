@@ -161,7 +161,10 @@ public class ClienteLogin {
 						if(controller.estaLogado(passwordFieldSenha.getText(),textFieldUser.getText(),servidor)==true){
 							
 							ClienteGui clienteGui = new ClienteGui();
+							clienteGui.setLabelUser(textFieldUser.getText());
+							clienteGui.setServ(servidor);
 							clienteGui.setVisible(true);
+							
 							
 						}
 					} catch (OperacaoInvalidaException e) {

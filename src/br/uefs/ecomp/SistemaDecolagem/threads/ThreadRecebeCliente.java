@@ -102,6 +102,16 @@ public class ThreadRecebeCliente extends Thread {
                     
 
                     break;
+                case 4:
+                	String client = informacoes[1];
+                	String origemC = informacoes[2];
+                	String destinoC = informacoes[3];
+                	String serv = informacoes[4];
+                	String destinoFinal = informacoes[5];
+                	controller.compraCaminho(client, origemC, destinoC, serv, destinoFinal);
+                	s = "retornando a compra";
+                	saida.writeObject(controller.reservarTrecho(origemC, destinoC, client, serv));
+                	break;
             }
             System.out.println("\nCliente atendido com sucesso: " + s + cliente.getRemoteSocketAddress().toString());
             textField.setText(textField.getText() + "\nCliente atendido com sucesso: " + s + cliente.getRemoteSocketAddress().toString());//coloca o log no textArea

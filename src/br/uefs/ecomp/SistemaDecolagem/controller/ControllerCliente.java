@@ -244,4 +244,24 @@ public class ControllerCliente {
 		return trechos;
 	}
 	
+	public String[] comprar(String client, String origem,String serv, String destino, String trecho) throws UnknownHostException, IOException, ClassNotFoundException {
+		String pack = "4|"+client+"|"+origem+"|"+destino+"|"+serv+"|"+trecho;// precisei converter em String, visto que a assinatura do combobox era Object.
+		
+		//Socket rec = new Socket(ControllerCliente.ipAtual,ControllerCliente.portaAtual);
+		Socket rec = new Socket(ipAtual,portaAtual);
+
+		//Enviando o código do arquivo a ser baixado do servidor
+		ObjectOutputStream saida = new ObjectOutputStream(rec.getOutputStream());
+		saida.writeObject(pack);
+		saida.flush();
+
+		ObjectInputStream entrada = new ObjectInputStream(rec.getInputStream());//recebo o pacote do cliente
+		String recebido = (String) entrada.readObject(); 
+		saida.close();//fecha a comunicação com o servidor
+		entrada.close();
+		rec.close();
+		String[] trechos = recebido.split(Pattern.quote("$"));
+		return trechos;
+	}
+	
 }
