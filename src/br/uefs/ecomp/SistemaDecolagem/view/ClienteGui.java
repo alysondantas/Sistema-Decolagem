@@ -117,6 +117,11 @@ public class ClienteGui extends JFrame {
 				listOrigem.addItem(temp[2]);
 				listOrigem.addItem(temp[3]);
 				listOrigem.addItem(temp[4]);
+				listDestino.addItem(temp[0]);
+				listDestino.addItem(temp[1]);
+				listDestino.addItem(temp[2]);
+				listDestino.addItem(temp[3]);
+				listDestino.addItem(temp[4]);
 				
 					//for(int i = 0; i<temp.length; i++ ){
 						//listOrigem.insertItemAt(controller.carregarOrigemDestino(), i);
